@@ -1,0 +1,223 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  role         UserRole      @default(USER)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  profile      Profile?
+  refreshTokens RefreshToken[]
+  auditLogs    AuditLog[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Profile {
+  id              String          @id @default(uuid())
+  userId          String          @unique
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name            String
+  education       String?
+  college         String?
+  university      String?
+  branch          String?
+  graduationYear  Int?
+  location        String?
+  experienceYrs   Int             @default(0)
+  resumeUrl       String?
+  githubUsername  String?
+  linkedinUrl     String?
+  targetRoleId    String?
+  targetRole      CareerRole?     @relation(fields: [targetRoleId], references: [id])
+  skills          UserSkill[]
+  roadmaps        Roadmap[]
+  resumeData      ResumeData?
+  userAssessments UserAssessment[]
+  aiReports       AiReport[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model CareerRole {
+  id               String            @id @default(uuid())
+  name             String            @unique
+  slug             String            @unique
+  description      String
+  salaryRange      String?
+  demandScore      Int               @default(5)
+  profiles         Profile[]
+  skills           RoleSkill[]
+  projectTemplates ProjectTemplate[]
+}
+
+model SkillCategory {
+  id     String  @id @default(uuid())
+  name   String  @unique
+  skills Skill[]
+}
+
+model Skill {
+  id                String             @id @default(uuid())
+  categoryId        String
+  category          SkillCategory      @relation(fields: [categoryId], references: [id])
+  name              String             @unique
+  slug              String             @unique
+  description       String?
+  userSkills        UserSkill[]
+  roleSkills        RoleSkill[]
+  learningResources LearningResource[]
+  assessments       Assessment[]
+}
+
+model RoleSkill {
+  id         String     @id @default(uuid())
+  roleId     String
+  role       CareerRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  skillId    String
+  skill      Skill      @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  importance Int        @default(5)
+
+  @@unique([roleId, skillId])
+}
+
+model UserSkill {
+  id        String   @id @default(uuid())
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  skillId   String
+  skill     Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  score     Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@unique([profileId, skillId])
+}
+
+model ProjectTemplate {
+  id          String     @id @default(uuid())
+  roleId      String
+  role        CareerRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  title       String
+  difficulty  String     
+  description String
+}
+
+model Assessment {
+  id              String           @id @default(uuid())
+  skillId         String
+  skill           Skill            @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  title           String
+  difficulty      String
+  questions       String           // Stores JSON string of questions, options, and answers
+  userAssessments UserAssessment[]
+}
+
+model UserAssessment {
+  id           String     @id @default(uuid())
+  profileId    String
+  profile      Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  score        Int
+  completedAt  DateTime   @default(now())
+}
+
+model LearningResource {
+  id         String   @id @default(uuid())
+  skillId    String
+  skill      Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  title      String
+  url        String
+  type       String   // ARTICLE, VIDEO, DOCUMENTATION, COURSE, PRACTICE, PROJECT
+  difficulty String   
+}
+
+model ResumeData {
+  id             String   @id @default(uuid())
+  profileId      String   @unique
+  profile        Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  rawText        String
+  parsedSkills   String   // Stores JSON string
+  parsedProjects String   // Stores JSON string
+  parsedJobs     String   // Stores JSON string
+  extractedAt    DateTime @default(now())
+}
+
+model Roadmap {
+  id           String        @id @default(uuid())
+  profileId    String
+  profile      Profile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  title        String
+  durationDays Int           @default(90)
+  isActive     Boolean       @default(true)
+  steps        RoadmapStep[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model RoadmapStep {
+  id          String     @id @default(uuid())
+  roadmapId   String
+  roadmap     Roadmap    @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  phase       Int        
+  title       String     
+  description String
+  order       Int
+  tasks       Task[]
+  createdAt   DateTime   @default(now())
+}
+
+model Task {
+  id            String      @id @default(uuid())
+  roadmapStepId String
+  roadmapStep   RoadmapStep @relation(fields: [roadmapStepId], references: [id], onDelete: Cascade)
+  title         String
+  description   String
+  status        String      @default("TODO") // TODO, IN_PROGRESS, DONE
+  dueDate       DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime    @default(now())
+}
+
+model AiReport {
+  id          String   @id @default(uuid())
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  reportType  String   
+  payload     String   // Stores JSON string
+  createdAt   DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  ip        String?
+  timestamp DateTime @default(now())
+}

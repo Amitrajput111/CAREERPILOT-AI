@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0B1120;
+  --foreground: #F9FAFB;
+  --primary: #4F46E5;
+  --primary-hover: #4338CA;
+  --accent: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --card-bg: #1F2937;
+  --surface: #111827;
+  --border-color: #374151;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-accent: var(--accent);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-card-bg: var(--card-bg);
+  --color-surface: var(--surface);
+  --color-border-color: var(--border-color);
+  
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-outfit: var(--font-outfit), sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Premium Vercel/Linear style panels */
+.glass-panel {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+}
+
+.glass-panel-hover {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-panel-hover:hover {
+  border-color: #3F3F46; /* Zinc 700 */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.glass-input {
+  background-color: #09090B;
+  border: 1px solid var(--border-color);
+  color: #FFFFFF;
+  transition: all 0.15s ease-in-out;
+  border-radius: 6px;
+}
+.glass-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+  outline: none;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #FFFFFF 0%, #D4D4D8 50%, #909090 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glow-btn {
+  transition: all 0.15s ease-in-out;
+  border-radius: 6px;
+}
+.glow-btn:hover {
+  opacity: 0.95;
+  transform: translateY(-0.5px);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #09090B;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3F3F46;
+}

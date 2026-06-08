@@ -1,0 +1,40 @@
+# Dependency Directories
+node_modules/
+jspm_packages/
+web_stage/
+
+# Build Outputs
+dist/
+build/
+.next/
+out/
+.docusaurus/
+
+# Local databases and development files
+*.db
+*.db-journal
+*.sqlite
+dev.db
+dev.db-journal
+
+# Environment Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.sync.local
+
+# Logs and debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Editor configurations and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
