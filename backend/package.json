@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate && npx cross-env DATABASE_URL=file:./dev.db prisma db push --accept-data-loss && npx ts-node prisma/seed.ts",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
