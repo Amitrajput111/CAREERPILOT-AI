@@ -45,12 +45,12 @@ export default function RegisterPage() {
       
       <div className="w-full max-w-md z-10">
         <div className="flex flex-col items-center mb-8">
-          <Compass className="h-10 w-10 text-primary mb-3 animate-pulse" />
-          <h2 className="font-outfit text-3xl font-bold text-white tracking-tight">Create Account</h2>
-          <p className="text-sm text-slate-400 mt-1">Start mapping your career navigation</p>
+          <Compass className="h-10 w-10 text-primary mb-3" />
+          <h2 className="font-outfit text-3xl font-bold text-slate-900 tracking-tight">Create Account</h2>
+          <p className="text-sm text-slate-500 mt-1">Start mapping your career navigation</p>
         </div>
 
-        <div className="glass-panel p-8 rounded-2xl">
+        <div className="glass-panel p-8 rounded-2xl bg-white">
           {error && (
             <div className="flex items-center gap-2 p-4 rounded-xl bg-danger/10 border border-danger/20 text-danger text-sm mb-6 animate-shake">
               <AlertCircle className="h-4 w-4 shrink-0" />
@@ -60,7 +60,7 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Email Address</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input
@@ -75,7 +75,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Password</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input
@@ -90,7 +90,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Confirm Password</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Confirm Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input
@@ -121,7 +121,7 @@ export default function RegisterPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <span className="text-sm text-slate-400">Already registered? </span>
+            <span className="text-sm text-slate-550">Already registered? </span>
             <Link href="/login" className="text-sm font-semibold text-primary hover:underline">
               Sign In
             </Link>

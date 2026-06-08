@@ -159,27 +159,27 @@ function AssessmentsContent() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-outfit text-2xl font-extrabold text-white tracking-tight">
-          Skill <span className="gradient-text">Assessments</span>
+        <h1 className="font-sans text-3xl font-bold text-slate-900 tracking-tight">
+          Skill Assessments
         </h1>
-        <p className="text-slate-400 text-xs mt-1">
+        <p className="text-slate-500 text-sm mt-1.5">
           Prove your skill capabilities with quick 5-question baseline validation quizzes.
         </p>
       </div>
 
       {/* Empty state - No target role selected */}
       {!profile?.targetRoleId ? (
-        <div className="glass-panel p-12 rounded-2xl max-w-xl mx-auto text-center space-y-6">
-          <Award className="h-12 w-12 text-slate-500 mx-auto animate-pulse" />
-          <div>
-            <h2 className="font-outfit text-xl font-bold text-white">No Target Role Defined</h2>
-            <p className="text-slate-400 text-xs mt-2 leading-relaxed">
+        <div className="glass-panel p-16 max-w-xl mx-auto text-center space-y-6">
+          <Award className="h-14 w-14 text-slate-400 mx-auto animate-pulse" />
+          <div className="space-y-2">
+            <h2 className="font-sans text-xl font-bold text-slate-900">No Target Role Defined</h2>
+            <p className="text-slate-500 text-sm leading-relaxed max-w-sm mx-auto">
               Choose a target career path in the Career Center to unlock recommended skill assessments.
             </p>
           </div>
           <button
             onClick={() => router.push('/career-center')}
-            className="glow-btn px-6 py-3 bg-primary hover:bg-primary/95 text-white font-semibold rounded-lg flex items-center justify-center gap-2 mx-auto cursor-pointer"
+            className="px-6 h-[48px] bg-primary hover:bg-primary-hover text-white font-semibold rounded-xl flex items-center justify-center gap-2 mx-auto cursor-pointer shadow-sm shadow-primary/10 transition-all duration-200"
           >
             Configure Target Career
             <ArrowRight className="h-4 w-4" />
@@ -187,50 +187,50 @@ function AssessmentsContent() {
         </div>
       ) : activeQuiz ? (
         /* Quiz Execution Panel */
-        <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-6">
+        <div className="glass-panel p-8 rounded-2xl space-y-8">
           {quizScore === null ? (
             <>
-              <div className="border-b border-border-color pb-4 flex justify-between items-start gap-4">
-                <div>
-                  <span className="text-[9px] bg-slate-850 text-slate-300 border border-border-color font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+              <div className="border-b border-slate-100 pb-5 flex justify-between items-start gap-4">
+                <div className="space-y-1">
+                  <span className="text-[10px] bg-indigo-50 text-primary font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                     {(activeQuiz.skill?.name) || 'Skill'} Verification
                   </span>
-                  <h2 className="font-outfit text-lg font-bold text-white mt-2">{activeQuiz.title}</h2>
+                  <h2 className="font-sans text-xl font-bold text-slate-900 mt-2">{activeQuiz.title}</h2>
                 </div>
                 <button
                   onClick={() => {
                     setActiveQuiz(null);
                     router.push('/assessments');
                   }}
-                  className="text-xs text-slate-400 hover:text-white cursor-pointer"
+                  className="text-xs font-semibold text-slate-400 hover:text-slate-700 cursor-pointer transition-colors"
                 >
                   Cancel
                 </button>
               </div>
 
               {errorMsg && (
-                <div className="flex items-center gap-2 p-3 rounded-lg bg-danger/10 border border-danger/20 text-danger text-xs">
-                  <AlertCircle className="h-4 w-4" />
+                <div className="flex items-center gap-2 p-3.5 rounded-xl bg-danger/10 border border-danger/20 text-danger text-xs">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
                   <span>{errorMsg}</span>
                 </div>
               )}
 
               {/* Questions */}
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {activeQuiz.questions?.map((q, qIdx) => (
-                  <div key={q.id} className="space-y-3">
-                    <h4 className="text-xs font-semibold text-white">
+                  <div key={q.id} className="space-y-4">
+                    <h4 className="text-sm font-semibold text-slate-800">
                       {qIdx + 1}. {q.text}
                     </h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {q.options?.map((opt) => (
                         <button
                           key={opt}
                           onClick={() => setAnswers(prev => ({ ...prev, [q.id]: opt }))}
-                          className={`p-3 text-xs text-left rounded-lg border transition-all cursor-pointer ${
+                          className={`p-3.5 text-xs text-left rounded-xl border transition-all cursor-pointer ${
                             answers[q.id] === opt
-                              ? 'bg-primary/10 border-primary text-white font-bold'
-                              : 'bg-slate-900/40 border-border-color text-slate-300 hover:border-white/10'
+                              ? 'bg-primary/10 border-primary text-slate-900 font-bold'
+                              : 'bg-slate-50/50 border-slate-200/60 text-slate-650 hover:bg-slate-55 hover:border-slate-350'
                           }`}
                         >
                           {opt}
@@ -244,7 +244,7 @@ function AssessmentsContent() {
               <button
                 onClick={handleSubmitQuiz}
                 disabled={grading}
-                className="w-full py-3 bg-primary hover:bg-primary/95 text-white font-semibold rounded-lg flex justify-center items-center gap-2 transition-colors cursor-pointer"
+                className="w-full h-[48px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl flex justify-center items-center gap-2 transition-all duration-200 cursor-pointer shadow-sm shadow-primary/10 disabled:opacity-50"
               >
                 {grading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit Answers & Grade'}
               </button>
@@ -252,20 +252,20 @@ function AssessmentsContent() {
           ) : (
             /* Quiz Score Graded state */
             <div className="text-center py-8 space-y-6">
-              <CheckCircle className="h-12 w-12 text-emerald-500 mx-auto animate-bounce" />
-              <div>
-                <h3 className="font-outfit text-xl font-bold text-white">Assessment Complete</h3>
-                <p className="text-xs text-slate-400 mt-1">
-                  Graded Score: <span className="text-emerald-400 font-bold text-base">{quizScore}%</span>
+              <CheckCircle className="h-12 w-12 text-emerald-550 mx-auto animate-bounce" />
+              <div className="space-y-1">
+                <h3 className="font-sans text-xl font-bold text-slate-900">Assessment Complete</h3>
+                <p className="text-xs text-slate-500">
+                  Graded Score: <span className="text-emerald-600 font-bold text-lg">{quizScore}%</span>
                 </p>
               </div>
               
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => handleStartQuiz(activeQuiz.id)}
-                  className="px-5 py-2.5 bg-slate-900/40 border border-border-color hover:border-white/10 text-slate-350 hover:text-white rounded-lg flex items-center gap-2 text-xs font-semibold cursor-pointer"
+                  className="px-5 h-[48px] bg-white border border-slate-200 hover:border-slate-350 text-slate-700 rounded-xl flex items-center gap-2 text-xs font-semibold cursor-pointer transition-all duration-200"
                 >
-                  <RefreshCw className="h-3.5 w-3.5" />
+                  <RefreshCw className="h-4 w-4 text-slate-500" />
                   Retake Quiz
                 </button>
                 <button
@@ -273,7 +273,7 @@ function AssessmentsContent() {
                     setActiveQuiz(null);
                     router.push('/assessments');
                   }}
-                  className="px-5 py-2.5 bg-primary hover:bg-primary/95 text-white rounded-lg text-xs font-semibold cursor-pointer"
+                  className="px-5 h-[48px] bg-primary hover:bg-primary-hover text-white rounded-xl text-xs font-bold cursor-pointer transition-all duration-200 shadow-sm shadow-primary/10"
                 >
                   Back to Assessments
                 </button>
@@ -291,30 +291,30 @@ function AssessmentsContent() {
                 (ua: any) => ua.assessmentId === ass.id
               );
               return (
-                <div key={ass.id} className="glass-panel p-6 rounded-2xl flex flex-col justify-between space-y-4 border border-border-color">
+                <div key={ass.id} className="glass-panel p-6 flex flex-col justify-between min-h-[180px] hover:shadow-md transition-all duration-250">
                   <div>
-                    <span className="text-[9px] bg-slate-850 text-slate-300 border border-border-color font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
+                    <span className="text-[10px] bg-indigo-50 text-primary font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                       {ass.skill?.name || 'Skill Quiz'}
                     </span>
-                    <h3 className="font-outfit text-base font-bold text-white mt-2 leading-snug">
+                    <h3 className="font-sans text-base font-bold text-slate-900 mt-3.5 leading-snug">
                       {ass.title}
                     </h3>
-                    <p className="text-[10px] text-slate-500 mt-1">Difficulty: {ass.difficulty}</p>
+                    <p className="text-[11px] text-slate-500 mt-1">Difficulty: {ass.difficulty}</p>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4 border-t border-border-color pt-4 mt-2">
+                  <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-4 mt-3">
                     {pastQuiz ? (
                       <div className="text-xs">
-                        <span className="text-slate-400">Best Score:</span>
-                        <span className="text-emerald-400 font-bold block">{pastQuiz.score}%</span>
+                        <span className="text-slate-450 block font-medium">Best Score:</span>
+                        <span className="text-emerald-600 font-bold block text-sm">{pastQuiz.score}%</span>
                       </div>
                     ) : (
-                      <span className="text-xs text-slate-500">Not attempted</span>
+                      <span className="text-xs text-slate-455 font-medium">Not attempted</span>
                     )}
 
                     <button
                       onClick={() => handleStartQuiz(ass.id)}
-                      className="px-4 py-2 bg-primary hover:bg-primary/95 text-white text-xs font-bold rounded-lg cursor-pointer"
+                      className="px-4 h-[36px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg cursor-pointer transition-all duration-200 shadow-sm shadow-primary/5"
                     >
                       {pastQuiz ? 'Retake Quiz' : 'Start Assessment'}
                     </button>
@@ -323,9 +323,9 @@ function AssessmentsContent() {
               );
             })
           ) : (
-            <div className="col-span-2 text-center py-12 glass-panel rounded-2xl border border-border-color">
-              <Award className="h-10 w-10 text-slate-600 mx-auto mb-2 animate-pulse" />
-              <span className="text-xs text-slate-405">No assessments pre-seeded for this target role.</span>
+            <div className="col-span-2 text-center py-16 glass-panel">
+              <Award className="h-12 w-12 text-slate-405 mx-auto mb-3 animate-pulse" />
+              <span className="text-xs text-slate-500 font-medium">No assessments pre-seeded for this target role.</span>
             </div>
           )}
         </div>
@@ -336,16 +336,16 @@ function AssessmentsContent() {
 
 export default function AssessmentsPage() {
   return (
-    <ShellLayout>
-      <div className="max-w-4xl w-full mx-auto px-4 py-8 space-y-8">
-        <Suspense fallback={
-          <div className="flex-grow flex justify-center items-center min-h-[400px]">
-            <Loader2 className="h-6 w-6 text-primary animate-spin" />
-          </div>
-        }>
-          <AssessmentsContent />
-        </Suspense>
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex justify-center items-center">
+        <Loader2 className="h-8 w-8 text-primary animate-spin" />
       </div>
-    </ShellLayout>
+    }>
+      <ShellLayout>
+        <div className="max-w-[1440px] mx-auto px-8 py-8 space-y-8">
+          <AssessmentsContent />
+        </div>
+      </ShellLayout>
+    </Suspense>
   );
 }

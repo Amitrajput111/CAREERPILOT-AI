@@ -277,17 +277,17 @@ export default function ProfilePage() {
         {/* Title Header */}
         <div className="mb-8 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <div>
-            <h1 className="font-outfit text-2xl font-extrabold text-white tracking-tight">
+            <h1 className="font-sans text-3xl font-bold text-slate-900 tracking-tight">
               Settings & Coordinates
             </h1>
-            <p className="text-slate-400 text-xs mt-1">
+            <p className="text-slate-505 text-sm mt-1.5">
               Configure your career destination targets, parse resume intelligence, and manage accounts.
             </p>
           </div>
           {profile?.user?.role === 'ADMIN' && (
             <button
               onClick={() => router.push('/admin')}
-              className="px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/35 text-xs font-bold rounded-lg transition-all cursor-pointer"
+              className="px-4 py-2 bg-amber-50 border border-amber-200 text-amber-600 text-xs font-semibold rounded-lg transition-all cursor-pointer hover:bg-amber-100/50"
             >
               Access Admin Content Panel
             </button>
@@ -295,7 +295,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Settings Navigation Tabs */}
-        <div className="flex border-b border-border-color mb-8 gap-4 overflow-x-auto">
+        <div className="flex border-b border-slate-200 mb-8 gap-4 overflow-x-auto">
           {[
             { id: 'profile', name: 'Profile Coordinates', icon: User },
             { id: 'resume', name: 'Resume Intelligence', icon: FileText },
@@ -310,8 +310,8 @@ export default function ProfilePage() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 pb-4 text-xs font-bold transition-all border-b-2 cursor-pointer whitespace-nowrap px-1 ${
                   active 
-                    ? 'border-primary text-white' 
-                    : 'border-transparent text-slate-500 hover:text-slate-350'
+                    ? 'border-primary text-primary' 
+                    : 'border-transparent text-slate-500 hover:text-slate-800'
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -331,7 +331,7 @@ export default function ProfilePage() {
               <div className="glass-panel p-6 sm:p-8 rounded-xl space-y-6">
                 <div className="flex items-center gap-2 border-b border-border-color pb-4">
                   <GraduationCap className="h-5 w-5 text-primary" />
-                  <h3 className="font-outfit font-bold text-sm text-white">Academic Details</h3>
+                  <h3 className="font-sans font-bold text-sm text-slate-900">Academic Details</h3>
                 </div>
 
                 {saveSuccess && (
@@ -578,7 +578,7 @@ export default function ProfilePage() {
               <div className="glass-panel p-6 sm:p-8 rounded-xl border border-border-color space-y-6">
                 <div className="flex items-center gap-2 border-b border-border-color pb-4">
                   <Github className="h-5 w-5 text-primary" />
-                  <h3 className="font-outfit font-bold text-sm text-white font-extrabold">Connected Accounts & Roles</h3>
+                  <h3 className="font-sans font-bold text-sm text-slate-900">Connected Accounts & Roles</h3>
                 </div>
 
                 {saveSuccess && (
@@ -592,20 +592,20 @@ export default function ProfilePage() {
                   
                   {/* Target Career Dropdown */}
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Target Career Role (Coordinates Destination)</label>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Target Career Role (Coordinates Destination)</label>
                     <select
                       value={targetRoleId}
                       onChange={(e) => setTargetRoleId(e.target.value)}
-                      className="glass-input w-full px-4 py-2.5 text-xs text-white"
+                      className="glass-input w-full px-4 py-2.5 text-xs text-slate-800"
                     >
-                      <option value="" disabled className="bg-slate-900 text-slate-500">Select target career path...</option>
+                      <option value="" disabled className="text-slate-400">Select target career path...</option>
                       {roles?.map((r) => (
-                        <option key={r.id} value={r.id} className="bg-slate-900 text-white">
+                        <option key={r.id} value={r.id} className="text-slate-800 bg-white">
                           {r.name}
                         </option>
                       ))}
                     </select>
-                    <span className="text-[10px] text-slate-550 mt-1.5 block">Changing your destination role will reset your active roadmap.</span>
+                    <span className="text-[10px] text-slate-500 mt-1.5 block">Changing your destination role will reset your active roadmap.</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -655,17 +655,17 @@ export default function ProfilePage() {
               <div className="space-y-6">
                 
                 {/* Export Data */}
-                <div className="glass-panel p-6 sm:p-8 rounded-xl border border-border-color space-y-4">
-                  <div className="flex items-center gap-2 border-b border-border-color pb-3">
+                <div className="glass-panel p-6 sm:p-8 rounded-xl space-y-4">
+                  <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                     <Download className="h-5 w-5 text-primary" />
-                    <h3 className="font-outfit font-bold text-sm text-white font-extrabold">Data Portability</h3>
+                    <h3 className="font-sans font-bold text-sm text-slate-900">Data Portability</h3>
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-500 leading-relaxed">
                     Download a complete copy of your career telemetry, parsed projects, scores, and active credentials in JSON format.
                   </p>
                   <button
                     onClick={handleExportData}
-                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-2 cursor-pointer"
+                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 cursor-pointer"
                   >
                     <span>Export Telemetry Profile JSON</span>
                   </button>
@@ -675,14 +675,14 @@ export default function ProfilePage() {
                 <div className="glass-panel p-6 sm:p-8 rounded-xl border border-danger/25 bg-danger/5 space-y-4">
                   <div className="flex items-center gap-2 border-b border-danger/20 pb-3">
                     <Trash2 className="h-5 w-5 text-danger" />
-                    <h3 className="font-outfit font-bold text-sm text-white font-extrabold">Dangerous Actions Zone</h3>
+                    <h3 className="font-sans font-bold text-sm text-danger">Dangerous Actions Zone</h3>
                   </div>
-                  <p className="text-xs text-slate-450 leading-relaxed">
+                  <p className="text-xs text-slate-600 leading-relaxed">
                     Permanently delete your profile data. This will destroy your learning roadmap, checklist states, user skills, and authentication records.
                   </p>
                   <button
                     onClick={handleDeleteAccount}
-                    className="px-4 py-2.5 bg-danger/15 hover:bg-danger/25 border border-danger/30 text-danger text-xs font-bold rounded-lg transition-all cursor-pointer"
+                    className="px-4 py-2.5 bg-danger hover:bg-danger/90 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer"
                   >
                     Delete CareerPilot AI Account
                   </button>
@@ -697,10 +697,10 @@ export default function ProfilePage() {
           <div className="lg:col-span-1 space-y-8">
             
             {/* User Skills list */}
-            <div className="glass-panel p-6 rounded-xl border border-border-color space-y-4">
-              <div className="flex items-center gap-2 border-b border-border-color pb-3">
+            <div className="glass-panel p-6 rounded-xl border border-slate-200 space-y-4">
+              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                 <Code className="h-4 w-4 text-primary" />
-                <h3 className="font-outfit font-bold text-xs text-white uppercase tracking-wider">Skills Coordinates</h3>
+                <h3 className="font-sans font-bold text-xs text-slate-900 uppercase tracking-wider">Skills Coordinates</h3>
               </div>
 
               {profile?.skills && profile.skills.length > 0 ? (
@@ -708,10 +708,10 @@ export default function ProfilePage() {
                   {profile.skills.map((s) => (
                     <div key={s.id} className="space-y-1">
                       <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-300">{s.skill.name}</span>
+                        <span className="text-slate-605">{s.skill.name}</span>
                         <span className="text-primary font-bold">{s.score}%</span>
                       </div>
-                      <div className="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-white/5">
+                      <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden border border-slate-200/40">
                         <div className="bg-primary h-full" style={{ width: `${s.score}%` }} />
                       </div>
                     </div>
@@ -725,18 +725,18 @@ export default function ProfilePage() {
             </div>
 
             {/* Audit Logs list */}
-            <div className="glass-panel p-6 rounded-xl border border-border-color space-y-4">
-              <div className="flex items-center gap-2 border-b border-border-color pb-3">
+            <div className="glass-panel p-6 rounded-xl border border-slate-200 space-y-4">
+              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
                 <ShieldAlert className="h-4 w-4 text-warning" />
-                <h3 className="font-outfit font-bold text-xs text-white uppercase tracking-wider">Security Logs</h3>
+                <h3 className="font-sans font-bold text-xs text-slate-900 uppercase tracking-wider">Security Logs</h3>
               </div>
 
               {profile?.user?.auditLogs && profile.user.auditLogs.length > 0 ? (
                 <div className="space-y-2.5 max-h-[250px] overflow-y-auto pr-2">
                   {profile.user.auditLogs.map((log) => (
-                    <div key={log.id} className="text-[10px] p-2.5 rounded-lg bg-slate-950 border border-border-color/30">
-                      <span className="font-bold text-slate-350 block leading-tight">{log.action}</span>
-                      <span className="text-slate-550 block mt-1">{new Date(log.timestamp).toLocaleString()}</span>
+                    <div key={log.id} className="text-[10px] p-2.5 rounded-lg bg-slate-50 border border-slate-150">
+                      <span className="font-bold text-slate-800 block leading-tight">{log.action}</span>
+                      <span className="text-slate-500 block mt-1">{new Date(log.timestamp).toLocaleString()}</span>
                     </div>
                   ))}
                 </div>

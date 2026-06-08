@@ -31,22 +31,22 @@ export default function Home() {
   ];
 
   return (
-    <div className="flex-1 flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-white">
+    <div className="flex-1 flex flex-col bg-background text-foreground selection:bg-primary/20 selection:text-slate-900">
       
       {/* Header navbar */}
-      <header className="h-[72px] border-b border-border-color bg-surface/50 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+      <header className="h-[72px] border-b border-slate-200/60 bg-white/85 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-[1440px] mx-auto px-8 h-full flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Compass className="h-6 w-6 text-primary animate-pulse" />
-            <span className="font-outfit text-base font-bold text-white tracking-tight">
+            <Compass className="h-6 w-6 text-primary" />
+            <span className="font-sans text-lg font-bold text-slate-900 tracking-tight">
               Career<span className="text-primary">Pilot</span>
             </span>
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="text-xs font-semibold text-slate-400 hover:text-white transition-colors">
+          <div className="flex items-center gap-6">
+            <Link href="/login" className="text-xs font-semibold text-slate-650 hover:text-slate-900 transition-colors">
               Sign In
             </Link>
-            <Link href="/register" className="glow-btn px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg transition-all shadow-md shadow-primary/25">
+            <Link href="/register" className="flex items-center justify-center px-5 h-[40px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10">
               Get Started
             </Link>
           </div>
@@ -54,100 +54,100 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-24 px-4 text-center max-w-4xl mx-auto z-10 space-y-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border-color mb-4">
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
-          <span className="text-[10px] font-bold text-slate-300 tracking-wide uppercase">Your Technical Career GPS</span>
+      <section className="relative py-28 px-8 text-center max-w-4xl mx-auto z-10 space-y-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200/80 mb-4 shadow-sm">
+          <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
+          <span className="text-[10px] font-bold text-slate-500 tracking-wide uppercase">Your Technical Career GPS</span>
         </div>
 
-        <h1 className="font-outfit text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
+        <h1 className="font-sans text-4xl sm:text-6xl font-bold tracking-tight text-slate-900 leading-tight">
           Know Your Next <br />
-          <span className="gradient-text">Career Move.</span>
+          <span className="text-primary">Career Move.</span>
         </h1>
 
-        <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto leading-relaxed">
           Stop guessing your career path. Get personalized roadmaps, skill-gap analysis, and daily action plans to reach your target engineering roles.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-4">
-          <Link href="/register" className="glow-btn inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg transition-transform hover:scale-[1.01] shadow-lg shadow-primary/20">
+          <Link href="/register" className="inline-flex items-center gap-2 px-6 h-[48px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10 hover:-translate-y-0.5">
             Start Your Career Journey
             <ArrowRight className="h-4 w-4" />
           </Link>
-          <Link href="/login" className="inline-flex items-center gap-2 px-6 py-3 bg-card-bg border border-border-color hover:border-white/10 text-slate-300 hover:text-white text-xs font-semibold rounded-lg transition-all">
+          <Link href="/login" className="inline-flex items-center gap-2 px-6 h-[48px] bg-white border border-slate-200 hover:border-slate-350 text-slate-700 text-xs font-semibold rounded-xl transition-all duration-200">
             See Demo
           </Link>
         </div>
       </section>
 
       {/* Problem Section */}
-      <section className="py-20 border-t border-border-color bg-surface/30">
-        <div className="max-w-4xl mx-auto px-4 text-center space-y-4">
-          <span className="text-[9px] uppercase font-bold text-danger bg-danger/10 border border-danger/20 px-2 py-0.5 rounded tracking-wider">
+      <section className="py-24 border-t border-slate-100 bg-white">
+        <div className="max-w-4xl mx-auto px-8 text-center space-y-4">
+          <span className="text-[10px] uppercase font-bold text-danger bg-danger/10 border border-danger/20 px-2.5 py-0.5 rounded-full tracking-wider">
             The Problem
           </span>
-          <h2 className="font-outfit text-2xl font-bold text-white tracking-tight">Too many tutorials, not enough direction</h2>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+          <h2 className="font-sans text-2xl font-bold text-slate-900 tracking-tight">Too many tutorials, not enough direction</h2>
+          <p className="text-sm text-slate-500 max-w-xl mx-auto leading-relaxed">
             YouTube playlists, GitHub repositories, and documentation sites are abundant. The problem isn't access to information; it's the lack of structured coordination. You don't need another generic course—you need a turn-by-turn roadmap.
           </p>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 border-t border-border-color bg-background">
-        <div className="max-w-5xl mx-auto px-4 space-y-12">
+      <section className="py-24 border-t border-slate-100 bg-slate-50/50">
+        <div className="max-w-5xl mx-auto px-8 space-y-16">
           <div className="text-center space-y-2">
-            <h2 className="font-outfit text-2xl font-bold text-white tracking-tight">How It Works</h2>
-            <p className="text-slate-400 text-xs">Four phases to chart your course and navigate to landing a job.</p>
+            <h2 className="font-sans text-2xl font-bold text-slate-900 tracking-tight">How It Works</h2>
+            <p className="text-slate-500 text-sm">Four phases to chart your course and navigate to landing a job.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="glass-panel p-6 rounded-xl space-y-4">
-              <span className="text-2xl font-extrabold text-primary">01</span>
-              <h3 className="font-outfit text-sm font-bold text-white">Define Target Role</h3>
-              <p className="text-slate-400 text-[11px] leading-relaxed">Select MERN, Frontend, Backend, or AI Engineer from our structured catalog.</p>
+            <div className="glass-panel p-6 space-y-4 hover:shadow-md transition-all duration-200">
+              <span className="text-2xl font-bold text-primary">01</span>
+              <h3 className="font-sans text-sm font-bold text-slate-900">Define Target Role</h3>
+              <p className="text-slate-500 text-xs leading-relaxed">Select MERN, Frontend, Backend, or AI Engineer from our structured catalog.</p>
             </div>
-            <div className="glass-panel p-6 rounded-xl space-y-4">
-              <span className="text-2xl font-extrabold text-primary">02</span>
-              <h3 className="font-outfit text-sm font-bold text-white">Upload Resume PDF</h3>
-              <p className="text-slate-400 text-[11px] leading-relaxed">Our parser analyzes your profile background, projects, and work history.</p>
+            <div className="glass-panel p-6 space-y-4 hover:shadow-md transition-all duration-200">
+              <span className="text-2xl font-bold text-primary">02</span>
+              <h3 className="font-sans text-sm font-bold text-slate-900">Upload Resume PDF</h3>
+              <p className="text-slate-500 text-xs leading-relaxed">Our parser analyzes your profile background, projects, and work history.</p>
             </div>
-            <div className="glass-panel p-6 rounded-xl space-y-4">
-              <span className="text-2xl font-extrabold text-primary">03</span>
-              <h3 className="font-outfit text-sm font-bold text-white">Verify Your Skills</h3>
-              <p className="text-slate-400 text-[11px] leading-relaxed">Take quick 5-question conceptual quizzes to test baseline capability.</p>
+            <div className="glass-panel p-6 space-y-4 hover:shadow-md transition-all duration-200">
+              <span className="text-2xl font-bold text-primary">03</span>
+              <h3 className="font-sans text-sm font-bold text-slate-900">Verify Your Skills</h3>
+              <p className="text-slate-500 text-xs leading-relaxed">Take quick 5-question conceptual quizzes to test baseline capability.</p>
             </div>
-            <div className="glass-panel p-6 rounded-xl space-y-4">
-              <span className="text-2xl font-extrabold text-primary">04</span>
-              <h3 className="font-outfit text-sm font-bold text-white">Run the Career GPS</h3>
-              <p className="text-slate-400 text-[11px] leading-relaxed">Receive daily action items and a turn-by-turn learning path timeline.</p>
+            <div className="glass-panel p-6 space-y-4 hover:shadow-md transition-all duration-200">
+              <span className="text-2xl font-bold text-primary">04</span>
+              <h3 className="font-sans text-sm font-bold text-slate-900">Run the Career GPS</h3>
+              <p className="text-slate-500 text-xs leading-relaxed">Receive daily action items and a turn-by-turn learning path timeline.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Career GPS Visualization Section */}
-      <section className="py-24 border-t border-border-color bg-surface/20">
-        <div className="max-w-5xl mx-auto px-4 space-y-12">
+      <section className="py-24 border-t border-slate-100 bg-white">
+        <div className="max-w-5xl mx-auto px-8 space-y-16">
           <div className="text-center space-y-2">
-            <span className="text-[9px] uppercase font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded tracking-wider">
+            <span className="text-[10px] uppercase font-bold text-primary bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full tracking-wider">
               Visualizer
             </span>
-            <h2 className="font-outfit text-2xl font-bold text-white tracking-tight">The GPS In Action</h2>
-            <p className="text-slate-400 text-xs">See how the navigation engine constructs your daily flight path.</p>
+            <h2 className="font-sans text-2xl font-bold text-slate-900 tracking-tight">The GPS In Action</h2>
+            <p className="text-slate-500 text-sm">See how the navigation engine constructs your daily flight path.</p>
           </div>
 
-          <div className="glass-panel p-8 rounded-2xl max-w-3xl mx-auto relative overflow-hidden">
+          <div className="glass-panel p-8 max-w-3xl mx-auto relative overflow-hidden">
             <div className="absolute top-0 right-0 h-40 w-40 bg-primary/5 rounded-full blur-2xl -z-10" />
-            <div className="absolute bottom-0 left-0 h-40 w-40 bg-accent/5 rounded-full blur-2xl -z-10" />
+            <div className="absolute bottom-0 left-0 h-40 w-40 bg-indigo-500/5 rounded-full blur-2xl -z-10" />
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
               {/* Node 1 */}
-              <div className="flex flex-col items-center text-center p-3 bg-slate-900/40 rounded-xl border border-border-color">
+              <div className="flex flex-col items-center text-center p-4 bg-slate-50/50 rounded-xl border border-slate-150">
                 <FileText className="h-6 w-6 text-slate-400 mb-2" />
-                <span className="text-[10px] text-slate-500 font-bold">STEP 1</span>
-                <span className="text-xs font-bold text-white mt-1">Upload Resume</span>
-                <span className="text-[9px] text-slate-400 mt-1">Parses skills & gaps</span>
+                <span className="text-[10px] text-slate-450 font-bold">STEP 1</span>
+                <span className="text-xs font-bold text-slate-800 mt-1">Upload Resume</span>
+                <span className="text-[10px] text-slate-500 mt-1">Parses skills & gaps</span>
               </div>
 
               {/* Line 1 */}
@@ -156,11 +156,11 @@ export default function Home() {
               </div>
 
               {/* Node 2 */}
-              <div className="flex flex-col items-center text-center p-3 bg-slate-900/40 rounded-xl border border-border-color">
+              <div className="flex flex-col items-center text-center p-4 bg-slate-50/50 rounded-xl border border-slate-150">
                 <Target className="h-6 w-6 text-warning mb-2" />
-                <span className="text-[10px] text-slate-500 font-bold">STEP 2</span>
-                <span className="text-xs font-bold text-white mt-1">Assess Skill</span>
-                <span className="text-[9px] text-slate-400 mt-1">React/Node.js Quizzes</span>
+                <span className="text-[10px] text-slate-450 font-bold">STEP 2</span>
+                <span className="text-xs font-bold text-slate-800 mt-1">Assess Skill</span>
+                <span className="text-[10px] text-slate-500 mt-1">React/Node.js Quizzes</span>
               </div>
 
               {/* Line 2 */}
@@ -169,34 +169,34 @@ export default function Home() {
               </div>
 
               {/* Node 3 */}
-              <div className="flex flex-col items-center text-center p-3 bg-primary/10 rounded-xl border border-primary/30">
+              <div className="flex flex-col items-center text-center p-4 bg-indigo-50/65 rounded-xl border border-primary/20">
                 <CheckSquare className="h-6 w-6 text-primary mb-2" />
                 <span className="text-[10px] text-primary font-bold">STEP 3</span>
-                <span className="text-xs font-bold text-white mt-1">GPS Checklist</span>
-                <span className="text-[9px] text-primary/80 mt-1">Daily tasks & progress</span>
+                <span className="text-xs font-bold text-slate-800 mt-1">GPS Checklist</span>
+                <span className="text-[10px] text-primary/80 mt-1">Daily tasks & progress</span>
               </div>
             </div>
 
             {/* Mock Task Panel Preview */}
-            <div className="mt-8 p-4 rounded-xl bg-slate-950/40 border border-border-color space-y-3">
-              <div className="flex justify-between items-center text-xs border-b border-border-color pb-2">
-                <span className="font-bold text-slate-300">ACTIVE FLIGHT CHECKLIST</span>
-                <span className="text-[10px] bg-accent/20 text-accent px-2 py-0.5 rounded font-bold">72% READINESS</span>
+            <div className="mt-8 p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
+              <div className="flex justify-between items-center text-xs border-b border-slate-200/60 pb-3">
+                <span className="font-bold text-slate-650 uppercase">Active Flight Checklist</span>
+                <span className="text-[10px] bg-indigo-50 text-primary px-2.5 py-0.5 rounded-full font-bold">72% READINESS</span>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between p-2.5 rounded bg-slate-900/60 border border-border-color text-xs">
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-white border border-slate-150/60 text-xs">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-accent" />
-                    <span className="text-slate-300">Build JWT Authentication</span>
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    <span className="text-slate-800 font-semibold">Build JWT Authentication</span>
                   </div>
-                  <span className="text-slate-500 text-[10px]">45 mins • +4 Backend Score</span>
+                  <span className="text-slate-500 text-[10px] font-medium">45 mins • +4 Backend Score</span>
                 </div>
-                <div className="flex items-center justify-between p-2.5 rounded bg-slate-900/30 border border-border-color text-xs opacity-75">
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-white/70 border border-slate-150/60 text-xs opacity-75">
                   <div className="flex items-center gap-2">
-                    <div className="h-4 w-4 rounded-full border border-slate-600" />
-                    <span className="text-slate-400">Implement React Context State</span>
+                    <div className="h-4 w-4 rounded-full border border-slate-350" />
+                    <span className="text-slate-605">Implement React Context State</span>
                   </div>
-                  <span className="text-slate-500 text-[10px]">30 mins • +3 Frontend Score</span>
+                  <span className="text-slate-500 text-[10px] font-medium">30 mins • +3 Frontend Score</span>
                 </div>
               </div>
             </div>
@@ -205,69 +205,71 @@ export default function Home() {
       </section>
 
       {/* Feature Section */}
-      <section className="py-20 border-t border-border-color bg-background">
-        <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="glass-panel p-8 rounded-xl space-y-4 hover:border-primary/30 transition-colors">
-            <div className="p-2.5 bg-primary/10 border border-primary/20 rounded-lg w-fit">
+      <section className="py-24 border-t border-slate-100 bg-slate-50/50">
+        <div className="max-w-5xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <div className="glass-panel p-8 rounded-2xl space-y-4 hover:border-primary/30 transition-all duration-200">
+            <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-lg w-fit">
               <Route className="h-5 w-5 text-primary" />
             </div>
-            <h3 className="font-outfit text-base font-bold text-white">Dynamic Roadmap timelines</h3>
-            <p className="text-slate-400 text-xs leading-relaxed">
+            <h3 className="font-sans text-base font-bold text-slate-900">Dynamic Roadmap Timelines</h3>
+            <p className="text-slate-500 text-xs leading-relaxed">
               Expandable timeline steps outlining skills, estimated completion hours, and curated learning routes.
             </p>
           </div>
 
-          <div className="glass-panel p-8 rounded-xl space-y-4 hover:border-accent/30 transition-colors">
-            <div className="p-2.5 bg-accent/10 border border-accent/20 rounded-lg w-fit">
-              <BarChart3 className="h-5 w-5 text-accent" />
+          <div className="glass-panel p-8 rounded-2xl space-y-4 hover:border-emerald-350 transition-all duration-200">
+            <div className="p-2.5 bg-emerald-50 border border-emerald-100 rounded-lg w-fit">
+              <BarChart3 className="h-5 w-5 text-emerald-600" />
             </div>
-            <h3 className="font-outfit text-base font-bold text-white">Scientific Readiness Metric</h3>
-            <p className="text-slate-400 text-xs leading-relaxed">
+            <h3 className="font-sans text-base font-bold text-slate-900">Scientific Readiness Metric</h3>
+            <p className="text-slate-500 text-xs leading-relaxed">
               Calculates your role preparedness using the weighted 40-30-20-10 ratio of skills, tasks, and assessment metrics.
             </p>
           </div>
 
-          <div className="glass-panel p-8 rounded-xl space-y-4 hover:border-warning/30 transition-colors">
-            <div className="p-2.5 bg-warning/10 border border-warning/20 rounded-lg w-fit">
+          <div className="glass-panel p-8 rounded-2xl space-y-4 hover:border-warning/30 transition-all duration-200">
+            <div className="p-2.5 bg-amber-50 border border-amber-100 rounded-lg w-fit">
               <Award className="h-5 w-5 text-warning" />
             </div>
-            <h3 className="font-outfit text-base font-bold text-white">Curated Gaps resources</h3>
-            <p className="text-slate-400 text-xs leading-relaxed">
+            <h3 className="font-sans text-base font-bold text-slate-900">Curated Gaps Resources</h3>
+            <p className="text-slate-500 text-xs leading-relaxed">
               Access immediate links to verified courses, videos, and articles for every technology gap identified.
             </p>
           </div>
+
         </div>
       </section>
 
       {/* Success Stories Section */}
-      <section className="py-20 border-t border-border-color bg-surface/30">
-        <div className="max-w-5xl mx-auto px-4 space-y-12">
+      <section className="py-24 border-t border-slate-100 bg-white">
+        <div className="max-w-5xl mx-auto px-8 space-y-16">
           <div className="text-center space-y-2">
-            <span className="text-[9px] uppercase font-bold text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded tracking-wider">
+            <span className="text-[10px] uppercase font-bold text-primary bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full tracking-wider">
               Testimonials
             </span>
-            <h2 className="font-outfit text-2xl font-bold text-white tracking-tight">Engineers who navigated with us</h2>
-            <p className="text-slate-400 text-xs">See how developers mapped their transitions into tech.</p>
+            <h2 className="font-sans text-2xl font-bold text-slate-900 tracking-tight">Engineers who navigated with us</h2>
+            <p className="text-slate-500 text-sm">See how developers mapped their transitions into tech.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="glass-panel p-8 rounded-xl space-y-4 relative">
-              <p className="text-xs text-slate-300 italic leading-relaxed">
+            <div className="glass-panel p-8 space-y-4 relative hover:shadow-md transition-all duration-200">
+              <p className="text-xs text-slate-600 italic leading-relaxed">
                 "I was stuck in tutorial hell for months, moving from one course to another without building real projects. CareerPilot AI structured my days. I completed my Node.js gaps, checked off my auth tasks, and landed my first Frontend role."
               </p>
               <div>
-                <h4 className="text-xs font-bold text-white">Aravind Sharma</h4>
-                <span className="text-[10px] text-slate-500 font-semibold uppercase">MERN Dev at TechCorp</span>
+                <h4 className="text-xs font-bold text-slate-900">Aravind Sharma</h4>
+                <span className="text-[10px] text-slate-400 font-semibold uppercase">MERN Dev at TechCorp</span>
               </div>
             </div>
 
-            <div className="glass-panel p-8 rounded-xl space-y-4 relative">
-              <p className="text-xs text-slate-300 italic leading-relaxed">
+            <div className="glass-panel p-8 space-y-4 relative hover:shadow-md transition-all duration-200">
+              <p className="text-xs text-slate-600 italic leading-relaxed">
                 "The Skill Radar chart was the turning point. It showed me my SQL knowledge was way below target for backend roles. The platform directed me to exact resources, tested me with quick quizzes, and let me map out my timeline clearly."
               </p>
               <div>
-                <h4 className="text-xs font-bold text-white">Priya Patel</h4>
-                <span className="text-[10px] text-slate-500 font-semibold uppercase">Backend Engineer at DevStudio</span>
+                <h4 className="text-xs font-bold text-slate-900">Priya Patel</h4>
+                <span className="text-[10px] text-slate-400 font-semibold uppercase">Backend Engineer at DevStudio</span>
               </div>
             </div>
           </div>
@@ -275,27 +277,27 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 border-t border-border-color bg-background">
-        <div className="max-w-3xl mx-auto px-4 space-y-12">
+      <section className="py-24 border-t border-slate-100 bg-slate-50/50">
+        <div className="max-w-3xl mx-auto px-8 space-y-16">
           <div className="text-center space-y-2">
-            <h2 className="font-outfit text-2xl font-bold text-white tracking-tight">Frequently Asked Questions</h2>
-            <p className="text-slate-400 text-xs">Clear answers about platform mechanics.</p>
+            <h2 className="font-sans text-2xl font-bold text-slate-900 tracking-tight">Frequently Asked Questions</h2>
+            <p className="text-slate-500 text-sm">Clear answers about platform mechanics.</p>
           </div>
 
           <div className="space-y-4">
             {faqs.map((faq, index) => {
               const isOpen = openFaq === index;
               return (
-                <div key={index} className="glass-panel rounded-xl overflow-hidden border border-border-color">
+                <div key={index} className="glass-panel overflow-hidden transition-all duration-200">
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between p-5 text-left text-xs font-bold text-white hover:text-primary transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-between p-5 text-left text-xs font-bold text-slate-800 hover:text-primary transition-colors cursor-pointer focus:outline-none"
                   >
                     <span>{faq.q}</span>
-                    {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    {isOpen ? <ChevronUp className="h-4 w-4 text-slate-500" /> : <ChevronDown className="h-4 w-4 text-slate-500" />}
                   </button>
                   {isOpen && (
-                    <div className="px-5 pb-5 pt-1 text-xs text-slate-400 leading-relaxed border-t border-border-color/20 bg-slate-900/10">
+                    <div className="px-5 pb-5 pt-1 text-xs text-slate-500 leading-relaxed border-t border-slate-100 bg-white/50">
                       {faq.a}
                     </div>
                   )}
@@ -307,17 +309,17 @@ export default function Home() {
       </section>
 
       {/* Banner / CTA Section */}
-      <section className="py-24 border-t border-border-color bg-gradient-to-b from-surface/50 to-background text-center px-4 relative overflow-hidden">
+      <section className="py-24 border-t border-slate-100 bg-white text-center px-8 relative overflow-hidden">
         <div className="max-w-xl mx-auto space-y-6 relative z-10">
           <Target className="h-8 w-8 text-primary mx-auto animate-bounce" />
-          <h2 className="font-outfit text-3xl font-extrabold text-white tracking-tight">
+          <h2 className="font-sans text-3xl font-bold text-slate-900 tracking-tight">
             Stop guessing. Start building.
           </h2>
-          <p className="text-xs text-slate-400 leading-relaxed max-w-sm mx-auto">
+          <p className="text-xs text-slate-500 leading-relaxed max-w-sm mx-auto">
             Join other engineering students who use CareerPilot AI to plan, check off, and verify their technical progression.
           </p>
           <div className="pt-2">
-            <Link href="/register" className="glow-btn inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg transition-transform hover:scale-[1.01] shadow-lg shadow-primary/20">
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 h-[48px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10 hover:-translate-y-0.5">
               Start Your Journey Now
               <ArrowRight className="h-4 w-4" />
             </Link>
@@ -326,8 +328,8 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border-color bg-surface py-8 text-center text-slate-500 text-[10px] font-bold uppercase tracking-wider">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <footer className="border-t border-slate-100 bg-white py-8 text-center text-slate-400 text-[10px] font-bold uppercase tracking-wider">
+        <div className="max-w-7xl mx-auto px-8">
           <span>© 2026 CareerPilot AI. All rights reserved. Know Your Next Career Move.</span>
         </div>
       </footer>

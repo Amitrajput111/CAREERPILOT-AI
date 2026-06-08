@@ -34,12 +34,12 @@ export default function LoginPage() {
       
       <div className="w-full max-w-md z-10">
         <div className="flex flex-col items-center mb-8">
-          <Compass className="h-10 w-10 text-primary mb-3 animate-pulse" />
-          <h2 className="font-outfit text-3xl font-bold text-white tracking-tight">Sign In</h2>
-          <p className="text-sm text-slate-400 mt-1">Navigate your tech career journey</p>
+          <Compass className="h-10 w-10 text-primary mb-3" />
+          <h2 className="font-outfit text-3xl font-bold text-slate-900 tracking-tight">Sign In</h2>
+          <p className="text-sm text-slate-500 mt-1">Navigate your tech career journey</p>
         </div>
 
-        <div className="glass-panel p-8 rounded-2xl">
+        <div className="glass-panel p-8 rounded-2xl bg-white">
           {error && (
             <div className="flex items-center gap-2 p-4 rounded-xl bg-danger/10 border border-danger/20 text-danger text-sm mb-6 animate-shake">
               <AlertCircle className="h-4 w-4 shrink-0" />
@@ -49,7 +49,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Email Address</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input
@@ -64,7 +64,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Password</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input
@@ -95,7 +95,7 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <span className="text-sm text-slate-400">New to CareerPilot? </span>
+            <span className="text-sm text-slate-500">New to CareerPilot? </span>
             <Link href="/register" className="text-sm font-semibold text-primary hover:underline">
               Create an account
             </Link>

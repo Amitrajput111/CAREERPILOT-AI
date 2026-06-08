@@ -6,7 +6,10 @@ import { useAuth } from '../../context/AuthContext';
 import { ShellLayout } from '../../components/ShellLayout';
 import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Compass, Route, Circle, CheckCircle2, ChevronDown, ChevronUp, BookOpen, Video, FileText, GraduationCap, ArrowRight, Loader2 } from 'lucide-react';
+import { 
+  Compass, Route, Circle, CheckCircle2, BookOpen, Video, FileText, 
+  GraduationCap, ArrowRight, Loader2, PlayCircle, Trophy, Sparkles, CheckSquare, UserCheck
+} from 'lucide-react';
 
 interface Task {
   id: string;
@@ -45,7 +48,6 @@ export default function RoadmapPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [expandedStep, setExpandedStep] = useState<string | null>(null);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function RoadmapPage() {
     enabled: !!user,
   });
 
-  // Fetch Learning Resources associated with the skills of the target role
+  // Fetch Learning Resources associated with target role
   const { data: resources } = useQuery<LearningResource[]>({
     queryKey: ['learning-resources'],
     queryFn: async () => {
@@ -115,18 +117,6 @@ export default function RoadmapPage() {
     enabled: !!user && !!roadmap,
   });
 
-  // Toggle expanded accordion steps
-  const toggleExpand = (stepId: string) => {
-    setExpandedStep(prev => (prev === stepId ? null : stepId));
-  };
-
-  // Set default expanded step
-  useEffect(() => {
-    if (roadmap?.steps && roadmap.steps.length > 0 && !expandedStep) {
-      setExpandedStep(roadmap.steps[0].id);
-    }
-  }, [roadmap, expandedStep]);
-
   // Task check mutation
   const toggleTaskMutation = useMutation({
     mutationFn: async ({ taskId, status }: { taskId: string; status: 'TODO' | 'DONE' }) => {
@@ -139,19 +129,20 @@ export default function RoadmapPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['active-roadmap'] });
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
   });
 
   const getResourceIcon = (type: string) => {
     switch (type) {
       case 'VIDEO':
-        return <Video className="h-4 w-4 text-rose-400" />;
+        return <Video className="h-4 w-4 text-rose-500" />;
       case 'DOCUMENTATION':
-        return <FileText className="h-4 w-4 text-emerald-400" />;
+        return <FileText className="h-4 w-4 text-emerald-500" />;
       case 'COURSE':
-        return <GraduationCap className="h-4 w-4 text-indigo-400" />;
+        return <GraduationCap className="h-4 w-4 text-indigo-500" />;
       default:
-        return <BookOpen className="h-4 w-4 text-amber-400" />;
+        return <BookOpen className="h-4 w-4 text-amber-500" />;
     }
   };
 
@@ -165,32 +156,45 @@ export default function RoadmapPage() {
 
   if (!user) return null;
 
+  // Find overall progress state to render node highlights
+  const steps = roadmap?.steps || [];
+  const activeStepIdx = steps.findIndex(s => s.tasks.some(t => t.status !== 'DONE'));
+
   return (
     <ShellLayout>
-      <div className="max-w-7xl w-full mx-auto px-4 py-8">
+      <div className="max-w-[1440px] mx-auto px-8 py-8 space-y-12">
         {/* HUD Header */}
-        <div className="mb-8">
-          <h1 className="font-outfit text-2xl font-extrabold text-white tracking-tight">
-            Navigation <span className="gradient-text">Roadmap</span>
-          </h1>
-          <p className="text-slate-400 text-xs mt-1">
-            Turn-by-turn guidance plan. Complete milestones to adjust your estimated readiness coordinates.
-          </p>
+        <div className="border-b border-slate-100 pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="font-sans text-3xl font-bold text-slate-900 tracking-tight">
+              Career Journey Timeline
+            </h1>
+            <p className="text-slate-500 text-sm mt-1.5">
+              Your step-by-step navigation map. Walk through each phase to unlock your full hireability score.
+            </p>
+          </div>
+          <button 
+            onClick={() => router.push('/dashboard')}
+            className="flex items-center gap-2 px-5 h-[48px] bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer border border-slate-200"
+          >
+            <span>Back to Dashboard</span>
+            <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
 
         {/* Empty state */}
         {!roadmap ? (
-          <div className="glass-panel p-12 rounded-2xl max-w-xl mx-auto text-center space-y-6">
-            <Route className="h-12 w-12 text-slate-500 mx-auto animate-pulse" />
-            <div>
-              <h2 className="font-outfit text-xl font-bold text-white">No Roadmap Coordinates</h2>
-              <p className="text-slate-400 text-xs mt-2 max-w-md mx-auto leading-relaxed">
-                Choose a target career path in the Career Center to begin generating your personalized roadmap.
+          <div className="glass-panel p-16 max-w-xl mx-auto text-center space-y-6">
+            <Route className="h-14 w-14 text-slate-400 mx-auto animate-pulse" />
+            <div className="space-y-2">
+              <h2 className="font-sans text-xl font-bold text-slate-900">No Active Career Path</h2>
+              <p className="text-slate-500 text-sm leading-relaxed max-w-md mx-auto">
+                Select a target role on the Opportunities board to compile your step-by-step career timeline.
               </p>
             </div>
             <button
               onClick={() => router.push('/career-center')}
-              className="glow-btn px-6 py-3 bg-primary hover:bg-primary-hover text-white font-semibold rounded-lg flex items-center justify-center gap-2 mx-auto cursor-pointer"
+              className="px-6 h-[48px] bg-primary hover:bg-primary-hover text-white font-semibold rounded-xl flex items-center justify-center gap-2 mx-auto cursor-pointer shadow-sm shadow-primary/10 transition-all duration-200"
             >
               Configure Target Career
               <ArrowRight className="h-4 w-4" />
@@ -198,104 +202,184 @@ export default function RoadmapPage() {
           </div>
         ) : (
           /* Main Timeline Grid */
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
-            {/* Timeline Steps Accordion List */}
+            {/* Left Column: Visual Vertical Journey Timeline */}
             <div className="lg:col-span-2 space-y-6">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-1">Roadmap Steps</h2>
               
-              <div className="space-y-4">
-                {roadmap.steps?.map((step) => {
-                  const isExpanded = expandedStep === step.id;
+              {/* Timeline Track */}
+              <div className="border-l-2 border-slate-200 ml-6 pl-10 space-y-12 relative">
+                
+                {/* Node 1: Current Position (Starting Point) */}
+                <div className="relative">
+                  {/* Timeline Dot Indicator */}
+                  <div className="absolute -left-[49px] top-1.5 w-6 h-6 rounded-full border-4 border-white bg-emerald-500 flex items-center justify-center shadow-sm">
+                    <UserCheck className="h-3 w-3 text-white" />
+                  </div>
+                  
+                  {/* Card Content */}
+                  <div className="glass-panel p-6 hover:shadow-md transition-all hover:scale-[1.01] duration-200">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="text-[10px] bg-emerald-50 text-emerald-600 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                          Baseline Verified
+                        </span>
+                        <h3 className="font-sans text-lg font-bold text-slate-900 mt-2">
+                          Current Position
+                        </h3>
+                        <p className="text-slate-550 text-xs mt-1.5 leading-relaxed">
+                          Your profile telemetry has been parsed. Initial skills and target role expectations are successfully mapped.
+                        </p>
+                      </div>
+                      <span className="text-xs font-semibold text-slate-400">Step 1 of {steps.length + 2}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dynamic Roadmap Steps */}
+                {steps.map((step, idx) => {
                   const stepDoneTasks = step.tasks?.filter(t => t.status === 'DONE').length || 0;
                   const stepProgress = step.tasks?.length > 0 ? Math.round((stepDoneTasks / step.tasks.length) * 100) : 0;
+                  
+                  const isCompleted = stepProgress === 100;
+                  const isActive = idx === activeStepIdx;
+                  const isLocked = idx > activeStepIdx && activeStepIdx !== -1;
 
                   return (
-                    <div
-                      key={step.id}
-                      className={`glass-panel rounded-2xl overflow-hidden border transition-all ${
-                        isExpanded ? 'border-primary/40 shadow-lg shadow-primary/5' : 'hover:border-white/5'
-                      }`}
-                    >
-                      {/* Step Header Accordion Toggle */}
-                      <button
-                        onClick={() => toggleExpand(step.id)}
-                        className="w-full flex items-center justify-between p-6 cursor-pointer text-left focus:outline-none"
-                      >
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-3">
-                            <span className="text-[9px] bg-slate-800 text-slate-300 border border-border-color font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-                              Phase {step.phase}
-                            </span>
-                            <span className="text-xs text-slate-400 font-semibold">{stepDoneTasks}/{step.tasks?.length || 0} Done</span>
-                          </div>
-                          <h3 className="font-outfit text-base font-bold text-white leading-snug">
-                            {step.title}
-                          </h3>
-                        </div>
+                    <div key={step.id} className="relative">
+                      
+                      {/* Timeline Dot Indicator */}
+                      <div className={`absolute -left-[49px] top-1.5 w-6 h-6 rounded-full border-4 border-white flex items-center justify-center shadow-sm transition-all duration-300 ${
+                        isCompleted 
+                          ? 'bg-emerald-500' 
+                          : isActive 
+                          ? 'bg-primary animate-pulse' 
+                          : 'bg-slate-350'
+                      }`}>
+                        {isCompleted ? (
+                          <CheckCircle2 className="h-3 w-3 text-white" />
+                        ) : (
+                          <div className="h-2.5 w-2.5 rounded-full bg-white" />
+                        )}
+                      </div>
 
-                        <div className="flex items-center gap-4">
-                          <div className="hidden sm:flex flex-col items-end">
-                            <span className="text-xs font-bold text-white">{stepProgress}%</span>
-                            <div className="w-16 bg-slate-805 h-1 rounded-full overflow-hidden mt-1 border border-white/5">
-                              <div className="bg-primary h-full" style={{ width: `${stepProgress}%` }} />
+                      {/* Card Content */}
+                      <div className={`glass-panel p-6 hover:shadow-md transition-all hover:scale-[1.01] duration-200 ${
+                        isActive ? 'border-primary/30 ring-1 ring-primary/10 shadow-sm' : ''
+                      }`}>
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-3">
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                                isCompleted 
+                                  ? 'bg-emerald-50 text-emerald-600' 
+                                  : isActive 
+                                  ? 'bg-indigo-50 text-primary' 
+                                  : 'bg-slate-100 text-slate-500'
+                              }`}>
+                                Phase {step.phase}
+                              </span>
+                              <span className="text-xs text-slate-450 font-semibold">{stepDoneTasks}/{step.tasks?.length || 0} Complete</span>
+                            </div>
+                            <h3 className="font-sans text-lg font-bold text-slate-900 mt-2 leading-snug">
+                              {step.title}
+                            </h3>
+                          </div>
+
+                          <div className="flex flex-col sm:items-end">
+                            <span className="text-sm font-bold text-slate-800">{stepProgress}% Complete</span>
+                            <div className="w-24 bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-200/40">
+                              <div 
+                                className={`h-full transition-all duration-500 ${isCompleted ? 'bg-emerald-500' : 'bg-primary'}`} 
+                                style={{ width: `${stepProgress}%` }} 
+                              />
                             </div>
                           </div>
-                          {isExpanded ? <ChevronUp className="h-5 w-5 text-slate-400" /> : <ChevronDown className="h-5 w-5 text-slate-400" />}
                         </div>
-                      </button>
 
-                      {/* Accordion Content */}
-                      {isExpanded && (
-                        <div className="px-6 pb-6 border-t border-border-color pt-6 space-y-6 bg-slate-900/10">
-                          <p className="text-xs text-slate-300 leading-relaxed">
+                        <div className="mt-4 space-y-4">
+                          <p className="text-xs text-slate-550 leading-relaxed">
                             {step.description}
                           </p>
 
-                          {/* Tasks list */}
-                          <div className="space-y-3">
-                            <h4 className="text-[9px] uppercase font-bold text-slate-500 tracking-wider">Checklist Actions</h4>
-                            <div className="space-y-2">
-                              {step.tasks?.map((task) => (
-                                <div
-                                  key={task.id}
-                                  onClick={() => toggleTaskMutation.mutate({
-                                    taskId: task.id,
-                                    status: task.status === 'DONE' ? 'TODO' : 'DONE'
-                                  })}
-                                  className="flex items-start gap-3 p-3 rounded-xl bg-slate-900/30 border border-border-color hover:border-primary/20 transition-all cursor-pointer group"
-                                >
-                                  {task.status === 'DONE' ? (
-                                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                                  ) : (
-                                    <Circle className="h-4 w-4 text-slate-500 group-hover:text-primary shrink-0 mt-0.5" />
-                                  )}
-                                  <div>
-                                    <h5 className={`text-xs font-semibold ${task.status === 'DONE' ? 'line-through text-slate-500' : 'text-slate-200'}`}>
-                                      {task.title}
-                                    </h5>
-                                    <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">
-                                      {task.description}
-                                    </p>
+                          {/* Step Tasks */}
+                          <div className="space-y-2.5">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Required Checklist actions</span>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              {step.tasks?.map((task) => {
+                                const isTaskDone = task.status === 'DONE';
+                                return (
+                                  <div
+                                    key={task.id}
+                                    onClick={() => toggleTaskMutation.mutate({
+                                      taskId: task.id,
+                                      status: isTaskDone ? 'TODO' : 'DONE'
+                                    })}
+                                    className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50/50 border border-slate-150/40 hover:border-slate-350 hover:bg-slate-50 transition-all cursor-pointer group"
+                                  >
+                                    {isTaskDone ? (
+                                      <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                                    ) : (
+                                      <Circle className="h-4 w-4 text-slate-400 group-hover:text-primary shrink-0 mt-0.5" />
+                                    )}
+                                    <div className="min-w-0">
+                                      <h5 className={`text-xs font-semibold truncate ${
+                                        isTaskDone ? 'line-through text-slate-400' : 'text-slate-800'
+                                      }`}>
+                                        {task.title}
+                                      </h5>
+                                      <p className="text-[11px] text-slate-500 mt-0.5 leading-normal line-clamp-1">
+                                        {task.description}
+                                      </p>
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
+                                );
+                              })}
                             </div>
                           </div>
                         </div>
-                      )}
+                      </div>
+
                     </div>
                   );
                 })}
+
+                {/* Node 3: Job Ready (Placement) */}
+                <div className="relative">
+                  {/* Timeline Dot Indicator */}
+                  <div className="absolute -left-[49px] top-1.5 w-6 h-6 rounded-full border-4 border-white bg-slate-300 flex items-center justify-center shadow-sm">
+                    <Trophy className="h-3 w-3 text-white" />
+                  </div>
+                  
+                  {/* Card Content */}
+                  <div className="glass-panel p-6 hover:shadow-md transition-all hover:scale-[1.01] duration-200">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="text-[10px] bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                          Future Milestone
+                        </span>
+                        <h3 className="font-sans text-lg font-bold text-slate-900 mt-2">
+                          Job Ready & Career Placement
+                        </h3>
+                        <p className="text-slate-550 text-xs mt-1.5 leading-relaxed">
+                          Complete all previous phase checklists to trigger resume telemetry verification, active role placement matching, and recruiter outreach pipelines.
+                        </p>
+                      </div>
+                      <span className="text-xs font-semibold text-slate-400">Final Step</span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
+
             </div>
 
-            {/* Right side column: Learning resources */}
-            <div className="lg:col-span-1 space-y-6">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-1">Curated Resources</h2>
+            {/* Right Column: Curated Learning Resources */}
+            <div className="lg:col-span-1 space-y-6 sticky top-24">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500 px-1">Curated Resources</h2>
               
-              <div className="glass-panel p-6 rounded-2xl space-y-4">
-                <p className="text-xs text-slate-400 leading-relaxed">
+              <div className="glass-panel p-6 space-y-4">
+                <p className="text-xs text-slate-500 leading-relaxed">
                   These verified courses, guides, and documentation articles correspond directly to the skills demanded by your roadmap.
                 </p>
 
@@ -307,31 +391,32 @@ export default function RoadmapPage() {
                         href={res.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-3 rounded-xl bg-slate-900/30 border border-border-color hover:border-primary/30 transition-all group"
+                        className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/50 border border-slate-200/50 hover:border-primary/20 hover:bg-slate-50 transition-all group"
                       >
-                        <div className="p-2 rounded-lg bg-white/5 border border-white/5 group-hover:border-primary/30 transition-colors">
+                        <div className="p-2 rounded-lg bg-white border border-slate-200 group-hover:border-primary/30 transition-colors shrink-0">
                           {getResourceIcon(res.type)}
                         </div>
                         <div className="overflow-hidden">
-                          <span className="text-[9px] bg-slate-800 text-slate-300 border border-border-color font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
+                          <span className="text-[9px] bg-indigo-50 text-primary font-bold px-2 py-0.5 rounded uppercase tracking-wider">
                             {res.skill.name}
                           </span>
-                          <h4 className="text-xs font-bold text-white mt-1 truncate group-hover:text-primary transition-colors">
+                          <h4 className="text-xs font-bold text-slate-800 mt-1 truncate group-hover:text-primary transition-colors">
                             {res.title}
                           </h4>
-                          <span className="text-[10px] text-slate-400 block capitalize">{res.type.toLowerCase()} • {res.difficulty}</span>
+                          <span className="text-[10px] text-slate-500 block capitalize mt-0.5">{res.type.toLowerCase()} • {res.difficulty}</span>
                         </div>
                       </a>
                     ))}
                   </div>
                 ) : (
-                  <div className="py-8 text-center space-y-2">
-                    <BookOpen className="h-8 w-8 text-slate-600 mx-auto animate-pulse" />
+                  <div className="py-12 text-center space-y-2">
+                    <BookOpen className="h-8 w-8 text-slate-400 mx-auto animate-pulse" />
                     <p className="text-xs text-slate-500">No resources linked yet.</p>
                   </div>
                 )}
               </div>
             </div>
+
           </div>
         )}
       </div>
