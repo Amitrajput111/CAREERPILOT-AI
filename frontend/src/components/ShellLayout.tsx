@@ -17,8 +17,6 @@ export const ShellLayout: React.FC<{ children: React.ReactNode }> = ({ children 
   const { user, loading, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [copilotOpen, setCopilotOpen] = useState(false);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'login' | 'register'>('login');
   const [messages, setMessages] = useState<Array<{ sender: 'user' | 'ai'; text: string }>>([
     { 
       sender: 'ai', 
@@ -154,26 +152,13 @@ export const ShellLayout: React.FC<{ children: React.ReactNode }> = ({ children 
 
         {/* Sidebar Footer */}
         <div className="p-3 border-t border-border-color space-y-1 bg-slate-50/50">
-          {user.isGuest ? (
-            <button
-              onClick={() => {
-                setModalMode('register');
-                setAuthModalOpen(true);
-              }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 transition-all cursor-pointer"
-            >
-              <Sparkles className="h-4.5 w-4.5 shrink-0 text-primary animate-pulse" />
-              {!collapsed && <span>Save Progress</span>}
-            </button>
-          ) : (
-            <button
-              onClick={logout}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 hover:text-danger hover:bg-danger/10 transition-all cursor-pointer"
-            >
-              <LogOut className="h-4.5 w-4.5 shrink-0" />
-              {!collapsed && <span>Logout</span>}
-            </button>
-          )}
+          <button
+            onClick={logout}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 hover:text-danger hover:bg-danger/10 transition-all cursor-pointer"
+          >
+            <LogOut className="h-4.5 w-4.5 shrink-0" />
+            {!collapsed && <span>Logout</span>}
+          </button>
         </div>
       </aside>
 
@@ -204,24 +189,12 @@ export const ShellLayout: React.FC<{ children: React.ReactNode }> = ({ children 
               <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 bg-primary rounded-full" />
             </button>
             <div className="h-4 w-[1px] bg-slate-200" />
-            {user.isGuest ? (
-              <button
-                onClick={() => {
-                  setModalMode('login');
-                  setAuthModalOpen(true);
-                }}
-                className="px-4 py-1.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm shadow-primary/10"
-              >
-                Sign In
-              </button>
-            ) : (
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs text-white shadow-sm">
-                  {user.email.substring(0, 2).toUpperCase()}
-                </div>
-                <span className="hidden sm:inline text-xs font-semibold text-slate-700">{user.email.split('@')[0]}</span>
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs text-white shadow-sm">
+                {user.email.substring(0, 2).toUpperCase()}
               </div>
-            )}
+              <span className="hidden sm:inline text-xs font-semibold text-slate-700">{user.email.split('@')[0]}</span>
+            </div>
           </div>
         </header>
 
@@ -363,194 +336,6 @@ export const ShellLayout: React.FC<{ children: React.ReactNode }> = ({ children 
         />
       )}
 
-      {/* 5. Non-Mandatory Authentication Popup Modal */}
-      {authModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-sm w-full overflow-hidden z-55 relative">
-            {/* Modal Close Button */}
-            <button 
-              onClick={() => setAuthModalOpen(false)}
-              className="absolute top-4 right-4 p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-all cursor-pointer"
-            >
-              <X className="h-4 w-4" />
-            </button>
-            {/* Modal Body */}
-            <div className="p-6">
-              <div className="text-center mb-6">
-                <Compass className="h-8 w-8 text-primary mx-auto mb-2" />
-                <h3 className="font-outfit text-xl font-bold text-slate-900">
-                  {modalMode === 'login' ? 'Welcome Back' : 'Save Your Roadmap'}
-                </h3>
-                <p className="text-slate-500 text-xs mt-1 leading-relaxed">
-                  {modalMode === 'login' 
-                    ? 'Sign in to access your saved career progress' 
-                    : 'Create an account to keep your analysis permanently'}
-                </p>
-              </div>
-
-              <ModalForm 
-                mode={modalMode} 
-                setMode={setModalMode} 
-                onSuccess={() => setAuthModalOpen(false)} 
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-    </div>
-  );
-};
-
-/* Sub-component: ModalForm for popup login/registration */
-const ModalForm: React.FC<{
-  mode: 'login' | 'register';
-  setMode: React.Dispatch<React.SetStateAction<'login' | 'register'>>;
-  onSuccess: () => void;
-}> = ({ mode, setMode, onSuccess }) => {
-  const { login, register } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    if (!email || !password) {
-      setError('Please fill in all fields.');
-      return;
-    }
-    if (mode === 'register') {
-      if (password.length < 8) {
-        setError('Password must be at least 8 characters.');
-        return;
-      }
-      if (password !== confirmPassword) {
-        setError('Passwords do not match.');
-        return;
-      }
-    }
-    setLoading(true);
-    try {
-      if (mode === 'login') {
-        await login(email, password);
-      } else {
-        await register(email, password);
-      }
-      onSuccess();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleQuickSignIn = async (userEmail: string, userPass: string) => {
-    setError(null);
-    setLoading(true);
-    try {
-      await login(userEmail, userPass);
-      onSuccess();
-    } catch (err: any) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      {error && (
-        <div className="p-3 rounded-xl bg-danger/10 border border-danger/20 text-danger text-xs leading-relaxed">
-          <span>{error}</span>
-        </div>
-      )}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Email Address</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={loading}
-            placeholder="name@company.com"
-            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={loading}
-            placeholder="••••••••"
-            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50"
-            required
-          />
-        </div>
-        {mode === 'register' && (
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              disabled={loading}
-              placeholder="••••••••"
-              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50"
-              required
-            />
-          </div>
-        )}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-2.5 bg-primary hover:bg-primary-hover text-white font-bold rounded-lg text-xs transition-colors flex justify-center items-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-sm shadow-primary/10"
-        >
-          {loading ? 'Processing...' : mode === 'login' ? 'Sign In' : 'Create Account'}
-        </button>
-      </form>
-
-      <div className="relative my-4">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-100" />
-        </div>
-        <div className="relative flex justify-center text-[9px] uppercase">
-          <span className="bg-white px-2 text-slate-400 font-bold tracking-wider">Quick Demo Access</span>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          disabled={loading}
-          onClick={() => handleQuickSignIn('user@careerpilot.ai', 'UserPass123!')}
-          className="py-2 border border-slate-200 rounded-lg text-center hover:bg-slate-50 transition-all cursor-pointer text-[10px] font-bold text-slate-700"
-        >
-          Demo User
-        </button>
-        <button
-          type="button"
-          disabled={loading}
-          onClick={() => handleQuickSignIn('admin@careerpilot.ai', 'AdminPass123!')}
-          className="py-2 border border-slate-200 rounded-lg text-center hover:bg-slate-50 transition-all cursor-pointer text-[10px] font-bold text-slate-700"
-        >
-          Demo Admin
-        </button>
-      </div>
-
-      <div className="text-center pt-2">
-        <button
-          type="button"
-          onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-          className="text-xs font-semibold text-primary hover:underline cursor-pointer"
-        >
-          {mode === 'login' ? "Don't have an account? Sign up" : 'Already registered? Sign in'}
-        </button>
-      </div>
     </div>
   );
 };

@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user && !user.isGuest) {
+    if (user) {
       router.push('/dashboard');
     }
   }, [user, router]);
