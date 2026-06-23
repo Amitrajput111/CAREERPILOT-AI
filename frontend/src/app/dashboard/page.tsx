@@ -263,14 +263,17 @@ export default function DashboardPage() {
             <div className="space-y-2">
               <h2 className="font-sans text-xl font-bold text-slate-900">Initialize Your Roadmap</h2>
               <p className="text-slate-500 text-sm leading-relaxed max-w-md mx-auto">
-                You haven't generated your target roadmap yet. Complete your profile and parse your resume to receive a personalized prep timeline.
+                {profile?.targetRoleId 
+                  ? `You have selected ${profile?.targetRole?.name || 'your target career role'}. Complete your onboarding and upload your resume to generate your custom roadmap.`
+                  : "You haven't generated your target roadmap yet. Complete your profile and parse your resume to receive a personalized prep timeline."
+                }
               </p>
             </div>
             <button
-              onClick={() => router.push('/career-center')}
+              onClick={() => router.push(profile?.targetRoleId ? '/onboarding' : '/career-center')}
               className="px-6 h-[48px] bg-primary hover:bg-primary-hover text-white font-semibold rounded-xl flex items-center justify-center gap-2 mx-auto cursor-pointer shadow-sm shadow-primary/10 transition-all duration-200"
             >
-              Select Target Career
+              {profile?.targetRoleId ? 'Continue to Onboarding' : 'Select Target Career'}
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>

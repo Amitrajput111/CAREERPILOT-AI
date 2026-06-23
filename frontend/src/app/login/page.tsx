@@ -1,16 +1,24 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../../context/AuthContext';
+import { useRouter } from 'next/navigation';
 import { Compass, Mail, Lock, Loader2, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { user, login } = useAuth();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,6 +101,55 @@ export default function LoginPage() {
               )}
             </button>
           </form>
+
+          {/* Direct Demo Sign-In Options */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center" aria-hidden="true">
+              <div className="w-full border-t border-slate-200" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-slate-400 font-bold tracking-wider">Direct Access</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              disabled={loading}
+              onClick={async () => {
+                setError(null);
+                setLoading(true);
+                try {
+                  await login('user@careerpilot.ai', 'UserPass123!');
+                } catch (err: any) {
+                  setError(err.message);
+                  setLoading(false);
+                }
+              }}
+              className="flex flex-col items-center justify-center p-3 border border-slate-200 hover:border-primary/45 hover:bg-slate-50/50 rounded-xl transition-all cursor-pointer text-center group disabled:opacity-50"
+            >
+              <span className="text-xs font-bold text-slate-750 group-hover:text-primary transition-colors">Demo User</span>
+              <span className="text-[10px] text-slate-400 mt-0.5">One-click sign in</span>
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={async () => {
+                setError(null);
+                setLoading(true);
+                try {
+                  await login('admin@careerpilot.ai', 'AdminPass123!');
+                } catch (err: any) {
+                  setError(err.message);
+                  setLoading(false);
+                }
+              }}
+              className="flex flex-col items-center justify-center p-3 border border-slate-200 hover:border-primary/45 hover:bg-slate-50/50 rounded-xl transition-all cursor-pointer text-center group disabled:opacity-50"
+            >
+              <span className="text-xs font-bold text-slate-750 group-hover:text-primary transition-colors">Demo Admin</span>
+              <span className="text-[10px] text-slate-400 mt-0.5">Full control access</span>
+            </button>
+          </div>
 
           <div className="mt-6 text-center">
             <span className="text-sm text-slate-500">New to CareerPilot? </span>

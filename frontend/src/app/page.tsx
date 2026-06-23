@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useAuth } from '../context/AuthContext';
 import { 
   Compass, Route, BarChart3, Award, ArrowRight, ShieldAlert, 
   Sparkles, BookOpen, Layers, CheckCircle2, ChevronDown, ChevronUp,
@@ -10,6 +11,12 @@ import {
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const { user, logout } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const faqs = [
     {
@@ -43,12 +50,30 @@ export default function Home() {
             </span>
           </div>
           <div className="flex items-center gap-6">
-            <Link href="/login" className="text-xs font-semibold text-slate-650 hover:text-slate-900 transition-colors">
-              Sign In
-            </Link>
-            <Link href="/register" className="flex items-center justify-center px-5 h-[40px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10">
-              Get Started
-            </Link>
+            {!mounted ? (
+              <div className="h-9 w-20 bg-slate-100 animate-pulse rounded-xl" />
+            ) : user ? (
+              <>
+                <Link href="/dashboard" className="text-xs font-semibold text-primary hover:text-primary-hover transition-colors">
+                  Go to Dashboard
+                </Link>
+                <button
+                  onClick={logout}
+                  className="flex items-center justify-center px-4 h-[36px] bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all duration-200 cursor-pointer"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="text-xs font-semibold text-slate-650 hover:text-slate-900 transition-colors">
+                  Sign In
+                </Link>
+                <Link href="/register" className="flex items-center justify-center px-5 h-[40px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10">
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -70,13 +95,29 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pt-4">
-          <Link href="/register" className="inline-flex items-center gap-2 px-6 h-[48px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10 hover:-translate-y-0.5">
-            Start Your Career Journey
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link href="/login" className="inline-flex items-center gap-2 px-6 h-[48px] bg-white border border-slate-200 hover:border-slate-350 text-slate-700 text-xs font-semibold rounded-xl transition-all duration-200">
-            See Demo
-          </Link>
+          {!mounted ? (
+            <div className="h-[48px] w-48 bg-slate-100 animate-pulse rounded-xl" />
+          ) : user ? (
+            <>
+              <Link href="/dashboard" className="inline-flex items-center gap-2 px-6 h-[48px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10 hover:-translate-y-0.5 animate-fade-in">
+                Go to Dashboard
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="/career-center" className="inline-flex items-center gap-2 px-6 h-[48px] bg-white border border-slate-200 hover:border-slate-350 text-slate-700 text-xs font-semibold rounded-xl transition-all duration-200">
+                Explore Careers
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/register" className="inline-flex items-center gap-2 px-6 h-[48px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10 hover:-translate-y-0.5">
+                Start Your Career Journey
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="/login" className="inline-flex items-center gap-2 px-6 h-[48px] bg-white border border-slate-200 hover:border-slate-350 text-slate-700 text-xs font-semibold rounded-xl transition-all duration-200">
+                See Demo
+              </Link>
+            </>
+          )}
         </div>
       </section>
 
@@ -319,10 +360,19 @@ export default function Home() {
             Join other engineering students who use CareerPilot AI to plan, check off, and verify their technical progression.
           </p>
           <div className="pt-2">
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 h-[48px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10 hover:-translate-y-0.5">
-              Start Your Journey Now
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            {!mounted ? (
+              <div className="h-[48px] w-48 bg-slate-100 animate-pulse rounded-xl mx-auto" />
+            ) : user ? (
+              <Link href="/dashboard" className="inline-flex items-center gap-2 px-6 h-[48px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10 hover:-translate-y-0.5">
+                Go to Dashboard
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : (
+              <Link href="/register" className="inline-flex items-center gap-2 px-6 h-[48px] bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm shadow-primary/10 hover:-translate-y-0.5">
+                Start Your Journey Now
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
           </div>
         </div>
       </section>
