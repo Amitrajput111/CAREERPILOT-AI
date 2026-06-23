@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('cp_session', JSON.stringify(sessionData));
       axios.defaults.headers.common['Authorization'] = `Bearer ${sessionData.accessToken}`;
       
-      router.push('/career-center');
+      router.push('/dashboard');
     } catch (error: any) {
       setLoading(false);
       throw new Error(error.response?.data?.message || 'Login failed. Please check credentials.');
