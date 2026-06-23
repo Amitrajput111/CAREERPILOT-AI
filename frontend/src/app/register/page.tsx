@@ -16,7 +16,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) {
+    if (user && !user.isGuest) {
       router.push('/dashboard');
     }
   }, [user, router]);

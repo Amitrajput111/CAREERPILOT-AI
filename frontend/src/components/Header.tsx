@@ -68,17 +68,28 @@ export const Header: React.FC = () => {
 
           {/* User Section */}
           <div className="flex items-center gap-4">
-            <div className="hidden sm:flex flex-col items-end">
-              <span className="text-xs text-slate-400">Welcome back,</span>
-              <span className="text-sm font-semibold text-slate-200">{user.email.split('@')[0]}</span>
-            </div>
-            <button
-              onClick={logout}
-              className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-danger transition-colors cursor-pointer bg-slate-900/50 hover:bg-danger/10 px-3 py-1.5 rounded-lg border border-border-color hover:border-danger/30"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">Logout</span>
-            </button>
+            {user.isGuest ? (
+              <Link
+                href="/login"
+                className="px-4 py-1.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg transition-all shadow-sm shadow-primary/10"
+              >
+                Sign In
+              </Link>
+            ) : (
+              <>
+                <div className="hidden sm:flex flex-col items-end">
+                  <span className="text-xs text-slate-400">Welcome back,</span>
+                  <span className="text-sm font-semibold text-slate-200">{user.email.split('@')[0]}</span>
+                </div>
+                <button
+                  onClick={logout}
+                  className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-danger transition-colors cursor-pointer bg-slate-900/50 hover:bg-danger/10 px-3 py-1.5 rounded-lg border border-border-color hover:border-danger/30"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span className="hidden sm:inline">Logout</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
