@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { AiService } from '../ai/ai.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { PDFParse } = require('pdf-parse');
+const pdfParse = require('pdf-parse');
 
 @Injectable()
 export class CareersService {
@@ -169,10 +169,8 @@ export class CareersService {
 
     let rawText = '';
     try {
-      const uint8 = new Uint8Array(buffer);
-      const parser = new PDFParse(uint8);
-      const parsedPdf = await parser.getText();
-      rawText = parsedPdf.text || '';
+      const parsed = await pdfParse(buffer);
+      rawText = parsed.text || '';
     } catch (err) {
       throw new Error('Failed to parse PDF resume format');
     }

@@ -3,7 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { ResumeUploadedEvent } from '../../common/events';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { PDFParse } = require('pdf-parse');
+const pdfParse = require('pdf-parse');
 import { AiService } from '../ai/ai.service';
 
 @Injectable()
@@ -92,10 +92,8 @@ export class ProfilesService {
 
     let rawText = '';
     try {
-      const uint8 = new Uint8Array(buffer);
-      const parser = new PDFParse(uint8);
-      const parsedPdf = await parser.getText();
-      rawText = parsedPdf.text || '';
+      const parsed = await pdfParse(buffer);
+      rawText = parsed.text || '';
     } catch (err) {
       this.logger.error('Error parsing PDF content:', err);
       throw new Error('Failed to parse PDF resume format');
