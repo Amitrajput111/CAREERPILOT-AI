@@ -133,7 +133,7 @@ export default function ProfilePage() {
   const { data: roles } = useQuery<any[]>({
     queryKey: ['roles'],
     queryFn: async () => {
-      const res = await axios.get('/api/careers');
+      const res = await axios.get('/api/careers/roles');
       return res.data;
     },
     enabled: !!user,

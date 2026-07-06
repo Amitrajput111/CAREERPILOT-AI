@@ -84,38 +84,49 @@ export default function RoadmapPage() {
     enabled: !!user,
   });
 
-  // Fetch Learning Resources associated with target role
-  const { data: resources } = useQuery<LearningResource[]>({
-    queryKey: ['learning-resources'],
+  // Fetch profile
+  const { data: profile } = useQuery({
+    queryKey: ['profile'],
     queryFn: async () => {
-      const profileRes = await axios.get('/api/profile', {
+      const res = await axios.get('/api/profile', {
         headers: getAuthHeaders(),
       });
-      const profile = profileRes.data;
-      
-      const rolesRes = await axios.get('/api/careers/roles', {
-        headers: getAuthHeaders(),
-      });
-      const roles = rolesRes.data;
-      const currentRole = roles.find((r: any) => r.id === profile.targetRoleId);
-
-      const items: LearningResource[] = [];
-      if (currentRole) {
-        for (const s of currentRole.skills) {
-          if (s.skill.learningResources && s.skill.learningResources.length > 0) {
-            s.skill.learningResources.forEach((lr: any) => {
-              items.push({
-                ...lr,
-                skill: { name: s.skill.name }
-              });
-            });
-          }
-        }
-      }
-      return items;
+      return res.data;
     },
     enabled: !!user && !!roadmap,
   });
+
+  // Fetch career-roles
+  const { data: roles } = useQuery({
+    queryKey: ['career-roles'],
+    queryFn: async () => {
+      const res = await axios.get('/api/careers/roles', {
+        headers: getAuthHeaders(),
+      });
+      return res.data;
+    },
+    enabled: !!user && !!roadmap,
+  });
+
+  // Compute resources memoized
+  const resources = React.useMemo(() => {
+    if (!profile || !roles) return [];
+    const currentRole = roles.find((r: any) => r.id === profile.targetRoleId);
+    const items: LearningResource[] = [];
+    if (currentRole) {
+      for (const s of currentRole.skills) {
+        if (s.skill.learningResources && s.skill.learningResources.length > 0) {
+          s.skill.learningResources.forEach((lr: any) => {
+            items.push({
+              ...lr,
+              skill: { name: s.skill.name }
+            });
+          });
+        }
+      }
+    }
+    return items;
+  }, [profile, roles]);
 
   // Task check mutation
   const toggleTaskMutation = useMutation({

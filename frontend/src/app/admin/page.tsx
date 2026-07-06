@@ -132,7 +132,7 @@ export default function AdminPage() {
   const { data: roles, refetch: refetchRoles } = useQuery<any[]>({
     queryKey: ['admin-roles'],
     queryFn: async () => {
-      const res = await axios.get('/api/careers');
+      const res = await axios.get('/api/careers/roles');
       return res.data;
     },
     enabled: !!profile && profile.user.role === 'ADMIN',
@@ -144,7 +144,7 @@ export default function AdminPage() {
     queryFn: async () => {
       // Find all seeded skills by checking role relationships or admin data models
       // For MVP ease we can query existing seeded skills
-      const res = await axios.get('/api/careers');
+      const res = await axios.get('/api/careers/roles');
       const list: any[] = [];
       const seen = new Set();
       res.data.forEach((r: any) => {

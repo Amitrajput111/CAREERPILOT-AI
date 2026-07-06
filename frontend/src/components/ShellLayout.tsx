@@ -8,15 +8,25 @@ import axios from 'axios';
 import { 
   Compass, LayoutDashboard, Route, ClipboardList, BarChart3, 
   FolderGit2, Award, User, Settings, LogOut, Menu, Bell,
-  Sparkles, Send, X
+  Sparkles, Send, X, Loader2
 } from 'lucide-react';
 
 export const ShellLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, login, register } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [copilotOpen, setCopilotOpen] = useState(false);
+  
+  // Auth modal states
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loadingAuth, setLoadingAuth] = useState(false);
+
   const [messages, setMessages] = useState<Array<{ sender: 'user' | 'ai'; text: string }>>([
     { 
       sender: 'ai', 
@@ -72,6 +82,38 @@ export const ShellLayout: React.FC<{ children: React.ReactNode }> = ({ children 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleSend(inputText);
+  };
+
+  const handleAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!email || !password) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    if (authMode === 'register' && password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    setLoadingAuth(true);
+    try {
+      if (authMode === 'register') {
+        await register(email, password);
+      } else {
+        await login(email, password);
+      }
+      setShowAuthModal(false);
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+    } catch (err: any) {
+      setError(err.message || 'Authentication failed.');
+    } finally {
+      setLoadingAuth(false);
+    }
   };
 
   const links = [
@@ -184,16 +226,31 @@ export const ShellLayout: React.FC<{ children: React.ReactNode }> = ({ children 
               <Sparkles className="h-3.5 w-3.5" />
               <span>AI Copilot</span>
             </button>
-            <button className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 relative cursor-pointer transition-colors">
-              <Bell className="h-4 w-4" />
-              <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 bg-primary rounded-full" />
-            </button>
+            {user?.isGuest ? (
+              <button 
+                onClick={() => {
+                  setAuthMode('register');
+                  setError(null);
+                  setShowAuthModal(true);
+                }}
+                className="flex items-center justify-center h-[36px] px-4 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition-all duration-200 shadow-sm cursor-pointer"
+              >
+                Save Progress
+              </button>
+            ) : (
+              <button className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 relative cursor-pointer transition-colors">
+                <Bell className="h-4 w-4" />
+                <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 bg-primary rounded-full" />
+              </button>
+            )}
             <div className="h-4 w-[1px] bg-slate-200" />
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs text-white shadow-sm">
-                {user.email.substring(0, 2).toUpperCase()}
+                {user?.isGuest ? 'G' : user?.email.substring(0, 2).toUpperCase()}
               </div>
-              <span className="hidden sm:inline text-xs font-semibold text-slate-700">{user.email.split('@')[0]}</span>
+              <span className="hidden sm:inline text-xs font-semibold text-slate-700">
+                {user?.isGuest ? 'Guest Session' : user?.email.split('@')[0]}
+              </span>
             </div>
           </div>
         </header>
@@ -209,13 +266,31 @@ export const ShellLayout: React.FC<{ children: React.ReactNode }> = ({ children 
         {[
           { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
           { name: 'Roadmap', path: '/roadmap', icon: Route },
-          { name: 'Skills', path: '/skills', icon: BarChart3 },
+          { name: 'Copilot', path: '#copilot', icon: Sparkles, onClick: () => setCopilotOpen(true) },
           { name: 'Opportunities', path: '/career-center', icon: Compass },
           { name: 'Profile', path: '/profile', icon: User },
         ].map((link) => {
           const Icon = link.icon;
           const active = pathname === link.path.split('#')[0];
-          
+          const content = (
+            <>
+              <Icon className="h-5 w-5 mb-0.5" />
+              <span>{link.name}</span>
+            </>
+          );
+
+          if (link.onClick) {
+            return (
+              <button
+                key={link.name}
+                onClick={link.onClick}
+                className="flex flex-col items-center justify-center py-1 px-3 text-[10px] font-medium transition-colors text-slate-500 hover:text-primary cursor-pointer border-none bg-transparent"
+              >
+                {content}
+              </button>
+            );
+          }
+
           return (
             <Link
               key={link.path}
@@ -224,8 +299,7 @@ export const ShellLayout: React.FC<{ children: React.ReactNode }> = ({ children 
                 active ? 'text-primary font-bold' : 'text-slate-500'
               }`}
             >
-              <Icon className="h-5 w-5 mb-0.5" />
-              <span>{link.name}</span>
+              {content}
             </Link>
           );
         })}
@@ -334,6 +408,116 @@ export const ShellLayout: React.FC<{ children: React.ReactNode }> = ({ children 
           onClick={() => setCopilotOpen(false)}
           className="fixed inset-0 bg-slate-900/30 backdrop-blur-xs z-45 transition-opacity duration-300"
         />
+      )}
+
+      {/* Soft Registration/Login Modal popup */}
+      {showAuthModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="glass-panel p-8 rounded-2xl max-w-md w-full bg-white relative shadow-xl border border-slate-200 space-y-6">
+            <button 
+              onClick={() => {
+                setShowAuthModal(false);
+                setError(null);
+              }}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-650 p-1 cursor-pointer text-sm"
+              type="button"
+            >
+              ✕
+            </button>
+
+            <div className="text-center space-y-2">
+              <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-2xl w-fit mx-auto animate-pulse">
+                <Compass className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="font-outfit text-xl font-bold text-slate-905">
+                {authMode === 'register' ? 'Save Progress' : 'Sign In'}
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                {authMode === 'register' 
+                  ? 'Upgrade your guest session to save your roadmaps, parsed skills, and action progress.' 
+                  : 'Log in to sync with your previously saved career path.'
+                }
+              </p>
+            </div>
+
+            {error && (
+              <div className="p-3.5 bg-danger/10 border border-danger/20 text-danger rounded-xl text-xs font-semibold text-center">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleAuthSubmit} className="space-y-4">
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Email Address</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="glass-input w-full px-3 py-2 text-xs"
+                  placeholder="name@email.com"
+                  disabled={loadingAuth}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="glass-input w-full px-3 py-2 text-xs"
+                  placeholder="••••••••"
+                  disabled={loadingAuth}
+                  required
+                />
+              </div>
+
+              {authMode === 'register' && (
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Confirm Password</label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="glass-input w-full px-3 py-2 text-xs"
+                    placeholder="••••••••"
+                    disabled={loadingAuth}
+                    required
+                  />
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loadingAuth}
+                className="glow-btn w-full py-3 px-4 bg-primary text-white rounded-xl font-bold flex justify-center items-center gap-2 hover:bg-primary-hover transition-colors disabled:opacity-50 cursor-pointer text-xs mt-2"
+              >
+                {loadingAuth ? (
+                  <>
+                    <Loader2 className="h-4.5 w-4.5 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  authMode === 'register' ? 'Create & Save Progress' : 'Sign In & Sync'
+                )}
+              </button>
+            </form>
+
+            <div className="text-center pt-2 border-t border-slate-100">
+              <button
+                onClick={() => {
+                  setAuthMode(authMode === 'register' ? 'login' : 'register');
+                  setError(null);
+                }}
+                type="button"
+                className="text-xs text-primary hover:underline font-semibold"
+              >
+                {authMode === 'register' ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
     </div>

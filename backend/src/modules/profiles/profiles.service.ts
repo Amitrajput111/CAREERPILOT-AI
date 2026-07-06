@@ -62,13 +62,16 @@ export class ProfilesService {
       where: { userId },
       data: {
         name: data.name ?? undefined,
+        education: data.education ?? undefined,
         college: data.college ?? undefined,
         university: data.university ?? undefined,
         branch: data.branch ?? undefined,
-        graduationYear: data.graduationYear !== undefined ? parseInt(data.graduationYear) : undefined,
+        graduationYear: data.graduationYear !== undefined ? (data.graduationYear ? parseInt(data.graduationYear) : null) : undefined,
         location: data.location ?? undefined,
-        experienceYrs: data.experienceYrs !== undefined ? parseInt(data.experienceYrs) : undefined,
+        experienceYrs: data.experienceYrs !== undefined ? (data.experienceYrs ? parseInt(data.experienceYrs) : 0) : undefined,
         targetRoleId: data.targetRoleId ?? undefined,
+        githubUsername: data.githubUsername ?? undefined,
+        linkedinUrl: data.linkedinUrl ?? undefined,
       },
     });
 

@@ -7,13 +7,13 @@ export const QueryProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        defaultQueries: {
+        defaultOptions: {
           queries: {
             staleTime: 5 * 60 * 1000, // 5 minutes cache
             refetchOnWindowFocus: false,
           },
         },
-      } as any),
+      }),
   );
 
   return (

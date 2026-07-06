@@ -12,7 +12,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async register(email: string, password: string) {
+  async register(email: string, password: string, guestUserId?: string) {
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -21,7 +21,76 @@ export class AuthService {
       throw new ConflictException('Email is already registered');
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    let user;
+    if (guestUserId) {
+      // Find the guest user
+      const guest = await this.prisma.user.findUnique({
+        where: { id: guestUserId },
+      });
+      if (guest && guest.email.startsWith('guest_')) {
+        const passwordHash = await bcrypt.hash(password, 10);
+        user = await this.prisma.user.update({
+          where: { id: guestUserId },
+          data: {
+            email,
+            passwordHash,
+            profile: {
+              update: {
+                name: email.split('@')[0],
+              },
+            },
+          },
+        });
+      }
+    }
+
+    if (!user) {
+      const passwordHash = await bcrypt.hash(password, 10);
+      user = await this.prisma.user.create({
+        data: {
+          email,
+          passwordHash,
+          profile: {
+            create: {
+              name: email.split('@')[0], // Default name from email prefix
+            },
+          },
+        },
+      });
+
+      // Create Audit Log
+      await this.prisma.auditLog.create({
+        data: {
+          userId: user.id,
+          action: 'USER_REGISTERED',
+        },
+      });
+    } else {
+      // Create Audit Log for guest upgrade
+      await this.prisma.auditLog.create({
+        data: {
+          userId: user.id,
+          action: 'GUEST_UPGRADED_TO_PERMANENT',
+        },
+      });
+    }
+
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
+    await this.saveRefreshToken(user.id, tokens.refreshToken);
+
+    return {
+      userId: user.id,
+      email: user.email,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    };
+  }
+
+  async registerGuest() {
+    const timestamp = Date.now();
+    const rand = Math.random().toString(36).substring(2, 7);
+    const email = `guest_${timestamp}_${rand}@careerpilot.ai`;
+    const passwordHash = await bcrypt.hash('GuestPass123!', 10);
 
     const user = await this.prisma.user.create({
       data: {
@@ -29,17 +98,16 @@ export class AuthService {
         passwordHash,
         profile: {
           create: {
-            name: email.split('@')[0], // Default name from email prefix
+            name: 'Guest User',
           },
         },
       },
     });
 
-    // Create Audit Log
     await this.prisma.auditLog.create({
       data: {
         userId: user.id,
-        action: 'USER_REGISTERED',
+        action: 'GUEST_SESSION_CREATED',
       },
     });
 

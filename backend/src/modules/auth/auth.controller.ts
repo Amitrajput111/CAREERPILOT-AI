@@ -20,16 +20,30 @@ export class AuthController {
     @Body() body: any,
     @Res({ passthrough: true }) res: express.Response,
   ) {
-    const { email, password } = body;
+    const { email, password, guestUserId } = body;
     if (!email || !password) {
       throw new UnauthorizedException('Email and password are required');
     }
-    const result = await this.authService.register(email, password);
+    const result = await this.authService.register(email, password, guestUserId);
     this.setRefreshTokenCookie(res, result.refreshToken);
     return {
       userId: result.userId,
       email: result.email,
       accessToken: result.accessToken,
+    };
+  }
+
+  @Post('register-guest')
+  async registerGuest(
+    @Res({ passthrough: true }) res: express.Response,
+  ) {
+    const result = await this.authService.registerGuest();
+    this.setRefreshTokenCookie(res, result.refreshToken);
+    return {
+      userId: result.userId,
+      email: result.email,
+      accessToken: result.accessToken,
+      isGuest: true,
     };
   }
 

@@ -4,10 +4,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-interface UserSession {
+export interface UserSession {
   userId: string;
   email: string;
   accessToken: string;
+  isGuest?: boolean;
 }
 
 interface AuthContextType {
@@ -31,21 +32,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    // Read session on mount
-    if (typeof window !== 'undefined') {
-      const savedUser = localStorage.getItem('cp_session');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser) as UserSession;
-          setUser(parsed);
-          // Set authorization header
-          axios.defaults.headers.common['Authorization'] = `Bearer ${parsed.accessToken}`;
-        } catch (e) {
-          localStorage.removeItem('cp_session');
+    const initAuth = async () => {
+      if (typeof window !== 'undefined') {
+        const savedUser = localStorage.getItem('cp_session');
+        if (savedUser) {
+          try {
+            const parsed = JSON.parse(savedUser) as UserSession;
+            setUser(parsed);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${parsed.accessToken}`;
+            
+            // Verify session validity by calling refresh in the background
+            try {
+              const response = await axios.post('/api/auth/refresh');
+              const newSession: UserSession = {
+                ...parsed,
+                accessToken: response.data.accessToken,
+              };
+              setUser(newSession);
+              localStorage.setItem('cp_session', JSON.stringify(newSession));
+              axios.defaults.headers.common['Authorization'] = `Bearer ${newSession.accessToken}`;
+            } catch (e) {
+              // Token expired/invalid - reset and get new guest session
+              localStorage.removeItem('cp_session');
+              const res = await axios.post('/api/auth/register-guest');
+              const guestSession: UserSession = res.data;
+              setUser(guestSession);
+              localStorage.setItem('cp_session', JSON.stringify(guestSession));
+              axios.defaults.headers.common['Authorization'] = `Bearer ${guestSession.accessToken}`;
+            }
+          } catch (e) {
+            localStorage.removeItem('cp_session');
+          }
+        } else {
+          // If no session exists, register a guest account
+          try {
+            const res = await axios.post('/api/auth/register-guest');
+            const guestSession: UserSession = res.data;
+            setUser(guestSession);
+            localStorage.setItem('cp_session', JSON.stringify(guestSession));
+            axios.defaults.headers.common['Authorization'] = `Bearer ${guestSession.accessToken}`;
+          } catch (err) {
+            console.error('Failed to initialize guest session', err);
+          }
         }
+        setLoading(false);
       }
-      setLoading(false);
-    }
+    };
+    initAuth();
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -70,14 +103,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const response = await axios.post('/api/auth/register', { email, password });
+      const guestUserId = user?.isGuest ? user.userId : undefined;
+      const response = await axios.post('/api/auth/register', { email, password, guestUserId });
       const sessionData: UserSession = response.data;
       
       setUser(sessionData);
       localStorage.setItem('cp_session', JSON.stringify(sessionData));
       axios.defaults.headers.common['Authorization'] = `Bearer ${sessionData.accessToken}`;
       
-      router.push('/career-center');
+      router.push('/dashboard');
     } catch (error: any) {
       setLoading(false);
       throw new Error(error.response?.data?.message || 'Registration failed. Email might be in use.');
@@ -95,7 +129,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     localStorage.removeItem('cp_session');
     delete axios.defaults.headers.common['Authorization'];
-    router.push('/login');
+
+    // Re-register a fresh guest session in the background
+    try {
+      const res = await axios.post('/api/auth/register-guest');
+      const guestSession: UserSession = res.data;
+      setUser(guestSession);
+      localStorage.setItem('cp_session', JSON.stringify(guestSession));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${guestSession.accessToken}`;
+    } catch (err) {
+      console.error('Failed to re-initialize guest session on logout', err);
+    }
+    router.push('/');
   };
 
   return (
@@ -106,7 +151,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         logout,
-        isAuthenticated: !!user,
+        isAuthenticated: !!user && !user.isGuest,
       }}
     >
       {children}
