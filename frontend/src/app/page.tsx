@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '../context/AuthContext';
 import { 
   Compass, Route, BarChart3, Award, ArrowRight, ShieldAlert, 
@@ -41,9 +42,11 @@ export default function Home() {
           <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-slate-600">
             <a href="#features" className="hover:text-slate-900 transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-slate-900 transition-colors">How It Works</a>
+            <a href="#mentorship" className="hover:text-primary transition-colors flex items-center gap-1">
+              <Sparkles className="h-3 w-3" /> Expert Mentors
+            </a>
             <a href="#product-preview" className="hover:text-slate-900 transition-colors">Roadmap</a>
             <a href="#pricing" className="hover:text-slate-900 transition-colors">Pricing</a>
-            <a href="#why-careerpilot" className="hover:text-slate-900 transition-colors">About</a>
           </nav>
 
           {/* Authentication CTAs */}
@@ -111,67 +114,45 @@ export default function Home() {
 
           {/* Hero Right Preview (Realistic Dashboard Simulation) */}
           <div className="lg:col-span-6 w-full flex justify-center lg:justify-end">
-            <div className="w-full max-w-xl rounded-2xl border border-slate-200 bg-slate-50/50 p-4 shadow-lg relative overflow-hidden">
+            <div className="w-full max-w-xl rounded-3xl border border-slate-200/60 bg-slate-50/30 p-2 shadow-2xl relative overflow-hidden backdrop-blur-xl group">
               
               {/* Decorative nodes */}
-              <div className="absolute top-0 right-0 h-40 w-40 bg-primary/5 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 h-40 w-40 bg-indigo-500/5 rounded-full blur-3xl" />
+              <div className="absolute top-0 right-0 h-64 w-64 bg-primary/20 rounded-full blur-[80px] transition-all duration-700 group-hover:bg-primary/30" />
+              <div className="absolute bottom-0 left-0 h-64 w-64 bg-indigo-500/20 rounded-full blur-[80px] transition-all duration-700 group-hover:bg-indigo-500/30" />
               
-              {/* Mini Dashboard HUD */}
-              <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-5 shadow-sm relative z-10">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-                  <div className="flex items-center gap-2">
-                    <Compass className="h-4.5 w-4.5 text-primary" />
-                    <span className="text-xs font-bold text-slate-800">Telemetry Terminal</span>
-                  </div>
-                  <span className="text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-100 px-2 py-0.5 rounded-full font-bold uppercase">
-                    Live Session
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 bg-slate-50 border border-slate-200/60 rounded-xl space-y-1">
-                    <span className="text-[9px] text-slate-405 font-bold uppercase tracking-wider">Target Position</span>
-                    <div className="text-xs font-bold text-slate-800">MERN Stack Developer</div>
-                  </div>
-                  <div className="p-3 bg-slate-50 border border-slate-200/60 rounded-xl space-y-1">
-                    <span className="text-[9px] text-slate-405 font-bold uppercase tracking-wider">Readiness Metrics</span>
-                    <div className="text-xs font-bold text-primary">72% Completed</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4 p-3.5 bg-indigo-50/40 border border-primary/10 rounded-xl">
-                  {/* Gauge */}
-                  <div className="relative h-12 w-12 flex items-center justify-center shrink-0">
-                    <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="24" cy="24" r="20" stroke="#E2E8F0" strokeWidth="3.5" fill="transparent" />
-                      <circle cx="24" cy="24" r="20" stroke="#4F46E5" strokeWidth="3.5" fill="transparent" strokeDasharray="125.6" strokeDashoffset="35.1" />
-                    </svg>
-                    <span className="absolute text-[10px] font-extrabold text-slate-850">72%</span>
-                  </div>
-                  <div className="space-y-0.5">
-                    <h4 className="text-xs font-bold text-slate-900">Career GPS Aligned</h4>
-                    <p className="text-[10px] text-slate-500">Skills overlap identified. 4 critical gaps remaining.</p>
-                  </div>
-                </div>
-
-                {/* Actions checklist preview */}
-                <div className="space-y-2">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Active Flight Tasks</div>
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between p-2.5 rounded-lg border border-slate-150 text-[11px] bg-slate-50/50">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-                        <span className="text-slate-800 font-semibold">Deploy JWT Auth API</span>
+              {/* Generated Image Container */}
+              <div className="relative rounded-2xl overflow-hidden border border-white/40 shadow-inner bg-slate-900/5">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent z-10" />
+                <Image 
+                  src="/images/hero-dashboard.jpg" 
+                  alt="Premium AI Dashboard UI" 
+                  width={800} 
+                  height={600}
+                  className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105"
+                  priority
+                />
+                
+                {/* Floating overlay card */}
+                <div className="absolute bottom-4 left-4 right-4 z-20">
+                  <div className="rounded-xl border border-white/20 bg-white/10 backdrop-blur-md p-4 shadow-2xl overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent" />
+                    <div className="relative flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="relative h-10 w-10 flex items-center justify-center shrink-0 bg-white/20 rounded-full border border-white/30 shadow-lg">
+                          <svg className="w-full h-full transform -rotate-90">
+                            <circle cx="20" cy="20" r="16" stroke="rgba(255,255,255,0.2)" strokeWidth="3" fill="transparent" />
+                            <circle cx="20" cy="20" r="16" stroke="#fff" strokeWidth="3" fill="transparent" strokeDasharray="100.5" strokeDashoffset="28.1" />
+                          </svg>
+                          <span className="absolute text-[9px] font-extrabold text-white">72%</span>
+                        </div>
+                        <div className="space-y-0.5">
+                          <h4 className="text-xs font-bold text-white drop-shadow-md">Career GPS Aligned</h4>
+                          <p className="text-[10px] text-white/80 font-medium">Skills overlap matched. Ready for liftoff.</p>
+                        </div>
                       </div>
-                      <span className="text-slate-400 text-[9px] font-bold">+4 Score</span>
-                    </div>
-                    <div className="flex items-center justify-between p-2.5 rounded-lg border border-slate-150 text-[11px]">
-                      <div className="flex items-center gap-2">
-                        <div className="h-3.5 w-3.5 rounded-full border border-slate-300" />
-                        <span className="text-slate-650">Verify SQL Indexing Quiz</span>
-                      </div>
-                      <span className="text-slate-400 text-[9px] font-bold">+3 Score</span>
+                      <span className="text-[9px] bg-emerald-500/20 text-emerald-100 border border-emerald-400/30 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider backdrop-blur-md">
+                        Live Session
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -294,6 +275,84 @@ export default function Home() {
             </div>
 
           </div>
+        </div>
+      </section>
+      {/* EXPERT AI MENTORSHIP */}
+      <section id="mentorship" className="py-24 px-6 bg-slate-900 border-b border-slate-800 text-white relative overflow-hidden">
+        {/* Dynamic Background Effects */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none translate-x-1/3 -translate-y-1/3" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[100px] mix-blend-screen pointer-events-none -translate-x-1/4 translate-y-1/4" />
+        
+        <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+          
+          <div className="space-y-8 order-2 lg:order-1">
+            <div className="space-y-4">
+              <span className="text-[10px] uppercase font-bold text-cyan-400 bg-cyan-900/40 border border-cyan-800/60 px-3 py-1 rounded-full tracking-wider">
+                Expert Tier
+              </span>
+              <h2 className="font-outfit text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.15]">
+                Master Your Stack with <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">
+                  Elite AI Mentorship
+                </span>
+              </h2>
+              <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-lg">
+                Unlock top-tier guidance from our 2026 generation AI Mentors. Trained on thousands of successful senior engineering interviews and real-world system designs, your mentor is available 24/7.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="mt-1 h-8 w-8 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
+                  <Brain className="h-4 w-4" />
+                </div>
+                <div>
+                  <h4 className="text-slate-200 font-bold text-sm">System Design Mastery</h4>
+                  <p className="text-slate-400 text-xs mt-1">Deep dive into scalable architectures, database indexing, and microservices.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="mt-1 h-8 w-8 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+                  <Star className="h-4 w-4" />
+                </div>
+                <div>
+                  <h4 className="text-slate-200 font-bold text-sm">Mock Interviews</h4>
+                  <p className="text-slate-400 text-xs mt-1">Simulate FAANG-level technical rounds with real-time feedback and behavioral analysis.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4">
+              <Link href="/register" className="inline-flex items-center gap-2 px-6 h-[48px] bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-sm font-bold rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)]">
+                Meet Your Mentor
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+            <div className="relative w-full max-w-md aspect-[4/5] rounded-3xl overflow-hidden border border-slate-700 shadow-2xl group">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent z-10" />
+              <Image 
+                src="/images/ai-expert.jpg" 
+                alt="AI Expert Mentor Hologram"
+                fill
+                className="object-cover transform transition-transform duration-1000 group-hover:scale-110"
+              />
+              <div className="absolute bottom-6 left-6 right-6 z-20">
+                <div className="backdrop-blur-md bg-slate-900/60 border border-slate-700 rounded-xl p-4 flex items-center gap-4">
+                  <div className="relative h-2 w-2 rounded-full bg-cyan-400 flex shrink-0">
+                    <div className="absolute inset-0 rounded-full bg-cyan-400 animate-ping opacity-75"></div>
+                  </div>
+                  <div>
+                    <h5 className="text-slate-200 font-bold text-xs">Aria - Staff Engineer Persona</h5>
+                    <p className="text-slate-400 text-[10px]">Online • Ready to review your React code</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
