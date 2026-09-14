@@ -60,6 +60,7 @@ model Profile {
   resumeData      ResumeData?
   userAssessments UserAssessment[]
   aiReports       AiReport[]
+  onboardingCompleted Boolean       @default(false)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 }

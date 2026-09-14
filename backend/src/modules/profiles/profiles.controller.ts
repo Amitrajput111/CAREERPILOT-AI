@@ -10,17 +10,17 @@ export class ProfilesController {
 
   @Get()
   async getProfile(@Req() req: any) {
-    return this.profilesService.getProfile(req.user.id);
+    return this.profilesService.getProfile(req.user.sub);
   }
 
   @Post()
   async updateProfile(@Req() req: any, @Body() body: any) {
-    return this.profilesService.updateProfile(req.user.id, body);
+    return this.profilesService.updateProfile(req.user.sub, body);
   }
 
   @Post('resume')
   @UseInterceptors(FileInterceptor('file', {
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
     fileFilter: (req: any, file: any, cb: any) => {
       if (file.mimetype !== 'application/pdf') {
         return cb(new BadRequestException('Only PDF resumes are supported'), false);
@@ -32,6 +32,11 @@ export class ProfilesController {
     if (!file) {
       throw new BadRequestException('No resume file provided');
     }
-    return this.profilesService.handleResumeUpload(req.user.id, file.buffer);
+    return this.profilesService.handleResumeUpload(req.user.sub, file.buffer);
+  }
+
+  @Post('complete-onboarding')
+  async completeOnboarding(@Req() req: any) {
+    return this.profilesService.completeOnboarding(req.user.sub);
   }
 }

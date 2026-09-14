@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
+import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 import { ShellLayout } from '../../components/ShellLayout';
-import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { FolderGit2, Calendar, Award, Code, Compass, ArrowRight, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -20,28 +20,13 @@ export default function ProjectsPage() {
   const router = useRouter();
 
   // Dynamic Auth Header Helper
-  const getAuthHeaders = () => {
-    if (typeof window !== 'undefined') {
-      const savedUser = localStorage.getItem('cp_session');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          return { Authorization: `Bearer ${parsed.accessToken}` };
-        } catch (e) {
-          return {};
-        }
-      }
-    }
-    return {};
-  };
+  
 
   // Fetch Profile data
   const { data: profile, isLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
-      const res = await axios.get('/api/profile', {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get('/api/profile');
       return res.data;
     },
     enabled: !!user,

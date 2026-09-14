@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
+import api from '../../../lib/api';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
 import { ShellLayout } from '../../../components/ShellLayout';
-import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { 
   Loader2, ArrowLeft, BookOpen, Video, FileText, Award, 
@@ -41,28 +41,13 @@ export default function SkillDetailsPage() {
   const router = useRouter();
 
   // Dynamic Auth Header Helper
-  const getAuthHeaders = () => {
-    if (typeof window !== 'undefined') {
-      const savedUser = localStorage.getItem('cp_session');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          return { Authorization: `Bearer ${parsed.accessToken}` };
-        } catch (e) {
-          return {};
-        }
-      }
-    }
-    return {};
-  };
+  
 
   // Fetch skill details
   const { data: skill, isLoading, error } = useQuery<SkillDetails>({
     queryKey: ['skill-details', id],
     queryFn: async () => {
-      const res = await axios.get(`/api/careers/skills/${id}`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get(`/api/careers/skills/${id}`);
       return res.data;
     },
     enabled: !!user && !!id,

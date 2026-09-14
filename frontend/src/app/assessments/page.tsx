@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
+import api from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
 import { ShellLayout } from '../../components/ShellLayout';
-import axios from 'axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Award, CheckCircle, Circle, ArrowRight, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -36,28 +36,13 @@ function AssessmentsContent() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Dynamic Auth Header Helper
-  const getAuthHeaders = () => {
-    if (typeof window !== 'undefined') {
-      const savedUser = localStorage.getItem('cp_session');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          return { Authorization: `Bearer ${parsed.accessToken}` };
-        } catch (e) {
-          return {};
-        }
-      }
-    }
-    return {};
-  };
+  
 
   // Fetch Profile details
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
-      const res = await axios.get('/api/profile', {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get('/api/profile');
       return res.data;
     },
     enabled: !!user,
@@ -67,9 +52,7 @@ function AssessmentsContent() {
   const { data: assessments, isLoading: assessmentsLoading } = useQuery<Assessment[]>({
     queryKey: ['assessments'],
     queryFn: async () => {
-      const res = await axios.get('/api/careers/roles', {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get('/api/careers/roles');
       const roles = res.data;
       const currentRole = roles.find((r: any) => r.id === profile?.targetRoleId);
 
@@ -96,9 +79,7 @@ function AssessmentsContent() {
     setQuizScore(null);
     setAnswers({});
     try {
-      const res = await axios.get(`/api/careers/assessments/${quizId}`, {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get(`/api/careers/assessments/${quizId}`);
       setActiveQuiz(res.data);
     } catch (e) {
       console.error(e);
@@ -133,11 +114,9 @@ function AssessmentsContent() {
     setErrorMsg(null);
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         `/api/careers/assessments/${activeQuiz.id}/submit`,
-        { answers: answersArray },
-        { headers: getAuthHeaders() }
-      );
+        { answers: answersArray });
       setQuizScore(res.data.score);
       setGrading(false);
       queryClient.invalidateQueries({ queryKey: ['profile'] });

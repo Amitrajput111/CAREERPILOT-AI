@@ -9,11 +9,16 @@ export class RoadmapsController {
 
   @Post('generate')
   async generateRoadmap(@Req() req: any) {
-    return this.roadmapsService.generateRoadmap(req.user.id);
+    return this.roadmapsService.generateRoadmap(req.user.sub);
+  }
+
+  @Post('regenerate')
+  async regenerateRoadmap(@Req() req: any) {
+    return this.roadmapsService.generateRoadmap(req.user.sub);
   }
 
   @Get('active')
   async getActiveRoadmap(@Req() req: any) {
-    return this.roadmapsService.getActiveRoadmap(req.user.id);
+    return this.roadmapsService.getActiveRoadmap(req.user.sub);
   }
 }

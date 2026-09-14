@@ -8,7 +8,10 @@ async function bootstrap() {
 
   // Enable CORS with support for credentials/cookies
   app.enableCors({
-    origin: true, // Echoes the request origin, robust for local dev
+    origin: [
+      'http://localhost:3000',
+      process.env.FRONTEND_URL || 'https://careerpilot-ai-coral.vercel.app',
+    ],
     credentials: true,
   });
 

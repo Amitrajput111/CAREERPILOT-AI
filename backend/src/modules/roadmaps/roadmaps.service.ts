@@ -279,4 +279,54 @@ export class RoadmapsService {
     const details = await this.calculateDetailedReadiness(profileId);
     return details.overall;
   }
+
+  async getDashboardData(userId: string) {
+    const profile = await this.prisma.profile.findUnique({
+      where: { userId },
+      include: {
+        targetRole: { include: { skills: { include: { skill: true } }, projectTemplates: true } },
+        skills: { include: { skill: true } },
+        resumeData: true,
+        user: { include: { auditLogs: { orderBy: { timestamp: 'desc' }, take: 8 } } },
+      },
+    });
+
+    if (!profile) {
+      return { profile: null, roadmap: null, todaysTasks: [], weeklyProgress: { tasksCompleted: 0, totalTasks: 0, completionRate: 0 }, recentActivity: [] };
+    }
+
+    const roadmap = await this.prisma.roadmap.findFirst({
+      where: { profileId: profile.id, isActive: true },
+      include: { steps: { include: { tasks: true }, orderBy: { order: 'asc' } } },
+    });
+
+    const readinessDetails = roadmap ? await this.calculateDetailedReadiness(profile.id) : { overall: 0, skill: 0, project: 0, interview: 0, roadmap: 0, consistency: 0 };
+
+    const allTasks = roadmap?.steps?.flatMap(s => s.tasks) || [];
+    const todaysTasks = allTasks.filter(t => t.status !== 'DONE').slice(0, 5);
+    const completedCount = allTasks.filter(t => t.status === 'DONE').length;
+    const weeklyProgress = {
+      tasksCompleted: completedCount,
+      totalTasks: allTasks.length,
+      completionRate: allTasks.length > 0 ? Math.round((completedCount / allTasks.length) * 100) : 0,
+    };
+
+    const recentActivity = profile.user?.auditLogs || [];
+
+    return {
+      profile: {
+        id: profile.id,
+        name: profile.name,
+        email: profile.user?.email || '',
+        targetRole: profile.targetRole,
+        skills: profile.skills,
+        onboardingCompleted: profile.onboardingCompleted,
+        resumeData: profile.resumeData,
+      },
+      roadmap: roadmap ? { ...roadmap, readinessScore: readinessDetails.overall, readinessDetails } : null,
+      todaysTasks,
+      weeklyProgress,
+      recentActivity,
+    };
+  }
 }

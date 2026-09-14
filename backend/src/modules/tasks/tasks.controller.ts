@@ -14,6 +14,6 @@ export class TasksController {
     @Body() body: any,
   ) {
     const { status } = body;
-    return this.tasksService.updateTaskStatus(req.user.id, id, status);
+    return this.tasksService.updateTaskStatus(req.user.sub, id, status);
   }
 }

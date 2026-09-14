@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import api from '../../lib/api';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { ShellLayout } from '../../components/ShellLayout';
-import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Compass, Briefcase, DollarSign, Flame, Layers, ListChecks, CheckCircle2, 
@@ -48,28 +48,13 @@ export default function CareerCenterPage() {
   }, [user, authLoading, router]);
 
   // Dynamic Auth Header Helper
-  const getAuthHeaders = () => {
-    if (typeof window !== 'undefined') {
-      const savedUser = localStorage.getItem('cp_session');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          return { Authorization: `Bearer ${parsed.accessToken}` };
-        } catch (e) {
-          return {};
-        }
-      }
-    }
-    return {};
-  };
+  
 
   // Fetch Profile to see currently selected target role
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
-      const res = await axios.get('/api/profile', {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get('/api/profile');
       return res.data;
     },
     enabled: !!user,
@@ -79,9 +64,7 @@ export default function CareerCenterPage() {
   const { data: roles, isLoading: rolesLoading } = useQuery<CareerRole[]>({
     queryKey: ['career-roles'],
     queryFn: async () => {
-      const res = await axios.get('/api/careers/roles', {
-        headers: getAuthHeaders()
-      });
+      const res = await api.get('/api/careers/roles');
       return res.data;
     },
     enabled: !!user,
@@ -90,11 +73,9 @@ export default function CareerCenterPage() {
   const selectRoleMutation = useMutation({
     mutationFn: async (roleId: string) => {
       setUpdatingRoleId(roleId);
-      const res = await axios.post(
+      const res = await api.post(
         '/api/profile',
-        { targetRoleId: roleId },
-        { headers: getAuthHeaders() }
-      );
+        { targetRoleId: roleId });
       return res.data;
     },
     onSuccess: () => {

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import api from '../../lib/api';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
 import { 
   Loader2, Compass, ArrowRight, ArrowLeft, Upload, FileText, CheckCircle2,
   GraduationCap, Target, Brain, Sparkles, AlertCircle
@@ -84,20 +84,7 @@ export default function OnboardingPage() {
   ];
 
   // Token injector helper
-  const getAuthHeaders = () => {
-    if (typeof window !== 'undefined') {
-      const savedUser = localStorage.getItem('cp_session');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          return { Authorization: `Bearer ${parsed.accessToken}` };
-        } catch (e) {
-          return {};
-        }
-      }
-    }
-    return {};
-  };
+  
 
   // Redirect if not logged in
   useEffect(() => {
@@ -110,11 +97,11 @@ export default function OnboardingPage() {
   useEffect(() => {
     if (user) {
       // Fetch career roles list
-      axios.get('/api/careers/roles', { headers: getAuthHeaders() })
+      api.get('/api/careers/roles')
         .then(res => {
           setRoles(res.data);
           // Fetch current profile to pre-fill
-          return axios.get('/api/profile', { headers: getAuthHeaders() });
+          return api.get('/api/profile');
         })
         .then(res => {
           const p = res.data;
@@ -155,9 +142,7 @@ export default function OnboardingPage() {
   const autoSaveFields = async (fieldsToSave: any) => {
     setSaving(true);
     try {
-      await axios.post('/api/profile', fieldsToSave, {
-        headers: getAuthHeaders()
-      });
+      await api.post('/api/profile', fieldsToSave);
     } catch (e) {
       console.error('Failed to auto-save progress step:', e);
     } finally {
@@ -217,10 +202,10 @@ export default function OnboardingPage() {
 
     try {
       setUploadProgress(60);
-      await axios.post('/api/profile/resume', formData, {
+      await api.post('/api/profile/resume', formData, {
         headers: { 
           'Content-Type': 'multipart/form-data',
-          ...getAuthHeaders()
+          
         },
       });
       setUploadProgress(100);
@@ -240,9 +225,7 @@ export default function OnboardingPage() {
     setMilestoneIndex(0);
     try {
       // Trigger backend roadmap generator
-      await axios.post('/api/roadmaps/generate', {}, {
-        headers: getAuthHeaders()
-      });
+      await api.post('/api/roadmaps/generate', {});
       // Pause slightly at the final stage to make the UI smooth
       setTimeout(() => {
         setStep(9);

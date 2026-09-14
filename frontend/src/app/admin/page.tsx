@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import api from '../../lib/api';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { ShellLayout } from '../../components/ShellLayout';
-import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Loader2, ShieldAlert, Plus, Trash2, Database, LayoutGrid, 
@@ -62,29 +62,11 @@ export default function AdminPage() {
   // Success/Error logs
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  // Dynamic Auth Header Helper
-  const getAuthHeaders = () => {
-    if (typeof window !== 'undefined') {
-      const savedUser = localStorage.getItem('cp_session');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          return { Authorization: `Bearer ${parsed.accessToken}` };
-        } catch (e) {
-          return {};
-        }
-      }
-    }
-    return {};
-  };
-
   // Fetch user profile to verify ADMIN role
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
-      const res = await axios.get('/api/profile', {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get('/api/profile');
       return res.data;
     },
     enabled: !!user,
@@ -108,9 +90,7 @@ export default function AdminPage() {
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['admin-stats'],
     queryFn: async () => {
-      const res = await axios.get('/api/admin/stats', {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get('/api/admin/stats');
       return res.data;
     },
     enabled: !!profile && profile.user.role === 'ADMIN',
@@ -120,9 +100,7 @@ export default function AdminPage() {
   const { data: categories } = useQuery<any[]>({
     queryKey: ['admin-categories'],
     queryFn: async () => {
-      const res = await axios.get('/api/admin/categories', {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get('/api/admin/categories');
       return res.data;
     },
     enabled: !!profile && profile.user.role === 'ADMIN',
@@ -132,7 +110,7 @@ export default function AdminPage() {
   const { data: roles, refetch: refetchRoles } = useQuery<any[]>({
     queryKey: ['admin-roles'],
     queryFn: async () => {
-      const res = await axios.get('/api/careers/roles');
+      const res = await api.get('/api/careers/roles');
       return res.data;
     },
     enabled: !!profile && profile.user.role === 'ADMIN',
@@ -144,7 +122,7 @@ export default function AdminPage() {
     queryFn: async () => {
       // Find all seeded skills by checking role relationships or admin data models
       // For MVP ease we can query existing seeded skills
-      const res = await axios.get('/api/careers/roles');
+      const res = await api.get('/api/careers/roles');
       const list: any[] = [];
       const seen = new Set();
       res.data.forEach((r: any) => {
@@ -163,7 +141,7 @@ export default function AdminPage() {
   // Create Career Role Mutation
   const createRoleMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await axios.post('/api/admin/roles', data, { headers: getAuthHeaders() });
+      const res = await api.post('/api/admin/roles', data);
       return res.data;
     },
     onSuccess: () => {
@@ -180,7 +158,7 @@ export default function AdminPage() {
   // Delete Career Role Mutation
   const deleteRoleMutation = useMutation({
     mutationFn: async (id: string) => {
-      await axios.delete(`/api/admin/roles/${id}`, { headers: getAuthHeaders() });
+      await api.delete(`/api/admin/roles/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-stats'] });
@@ -192,7 +170,7 @@ export default function AdminPage() {
   // Create Skill Mutation
   const createSkillMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await axios.post('/api/admin/skills', data, { headers: getAuthHeaders() });
+      const res = await api.post('/api/admin/skills', data);
       return res.data;
     },
     onSuccess: () => {
@@ -207,7 +185,7 @@ export default function AdminPage() {
   // Map Skill to Role Mutation
   const mapSkillMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await axios.post('/api/admin/role-skills', data, { headers: getAuthHeaders() });
+      const res = await api.post('/api/admin/role-skills', data);
       return res.data;
     },
     onSuccess: () => {
@@ -219,7 +197,7 @@ export default function AdminPage() {
   // Unmap Skill Mutation
   const unmapSkillMutation = useMutation({
     mutationFn: async ({ roleId, skillId }: { roleId: string; skillId: string }) => {
-      await axios.delete(`/api/admin/role-skills/${roleId}/${skillId}`, { headers: getAuthHeaders() });
+      await api.delete(`/api/admin/role-skills/${roleId}/${skillId}`);
     },
     onSuccess: () => {
       refetchRoles();
@@ -230,7 +208,7 @@ export default function AdminPage() {
   // Create Project Template Mutation
   const createProjectMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await axios.post('/api/admin/projects', data, { headers: getAuthHeaders() });
+      const res = await api.post('/api/admin/projects', data);
       return res.data;
     },
     onSuccess: () => {
@@ -244,7 +222,7 @@ export default function AdminPage() {
   // Delete Project Mutation
   const deleteProjectMutation = useMutation({
     mutationFn: async (id: string) => {
-      await axios.delete(`/api/admin/projects/${id}`, { headers: getAuthHeaders() });
+      await api.delete(`/api/admin/projects/${id}`);
     },
     onSuccess: () => {
       refetchRoles();
@@ -255,7 +233,7 @@ export default function AdminPage() {
   // Create Resource Mutation
   const createResourceMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await axios.post('/api/admin/resources', data, { headers: getAuthHeaders() });
+      const res = await api.post('/api/admin/resources', data);
       return res.data;
     },
     onSuccess: () => {
@@ -269,7 +247,7 @@ export default function AdminPage() {
   // Create Assessment Mutation
   const createAssessmentMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await axios.post('/api/admin/assessments', data, { headers: getAuthHeaders() });
+      const res = await api.post('/api/admin/assessments', data);
       return res.data;
     },
     onSuccess: () => {

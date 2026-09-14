@@ -72,6 +72,7 @@ export class ProfilesService {
         targetRoleId: data.targetRoleId ?? undefined,
         githubUsername: data.githubUsername ?? undefined,
         linkedinUrl: data.linkedinUrl ?? undefined,
+        onboardingCompleted: data.onboardingCompleted ?? undefined,
       },
     });
 
@@ -85,6 +86,8 @@ export class ProfilesService {
 
     return updatedProfile;
   }
+
+
 
   async handleResumeUpload(userId: string, buffer: Buffer) {
     const profile = await this.prisma.profile.findUnique({ where: { userId } });
@@ -224,5 +227,21 @@ export class ProfilesService {
     } catch (err) {
       this.logger.error(`❌ Background parsing failed for user ${userId}:`, err);
     }
+  }
+
+  async completeOnboarding(userId: string) {
+    const profile = await this.prisma.profile.findUnique({ where: { userId } });
+    if (!profile) throw new NotFoundException('Profile not found');
+
+    await this.prisma.profile.update({
+      where: { userId },
+      data: { onboardingCompleted: true },
+    });
+
+    await this.prisma.auditLog.create({
+      data: { userId, action: 'ONBOARDING_COMPLETED' },
+    });
+
+    return { message: 'Onboarding marked complete' };
   }
 }

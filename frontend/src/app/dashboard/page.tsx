@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import api from '../../lib/api';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { ShellLayout } from '../../components/ShellLayout';
-import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Compass, CheckCircle2, Circle, Trophy, ClipboardList, 
@@ -72,28 +72,13 @@ export default function DashboardPage() {
   }, [user, authLoading, router]);
 
   // Dynamic Auth Header Helper
-  const getAuthHeaders = () => {
-    if (typeof window !== 'undefined') {
-      const savedUser = localStorage.getItem('cp_session');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          return { Authorization: `Bearer ${parsed.accessToken}` };
-        } catch (e) {
-          return {};
-        }
-      }
-    }
-    return {};
-  };
+  
 
   // Fetch user profile
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
-      const res = await axios.get('/api/profile', {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get('/api/profile');
       return res.data;
     },
     enabled: !!user,
@@ -103,9 +88,7 @@ export default function DashboardPage() {
   const { data: roadmap, isLoading: roadmapLoading } = useQuery<ActiveRoadmap | null>({
     queryKey: ['active-roadmap'],
     queryFn: async () => {
-      const res = await axios.get('/api/roadmaps/active', {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get('/api/roadmaps/active');
       return res.data;
     },
     enabled: !!user,
@@ -114,11 +97,9 @@ export default function DashboardPage() {
   // Task check mutation
   const toggleTaskMutation = useMutation({
     mutationFn: async ({ taskId, status }: { taskId: string; status: 'TODO' | 'DONE' }) => {
-      const res = await axios.patch(
+      const res = await api.patch(
         `/api/tasks/${taskId}`,
-        { status },
-        { headers: getAuthHeaders() }
-      );
+        { status });
       return res.data;
     },
     onSuccess: (data) => {
@@ -141,11 +122,9 @@ export default function DashboardPage() {
     setAskingCopilot(true);
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         '/api/ai/copilot',
-        { message: userMsg },
-        { headers: getAuthHeaders() }
-      );
+        { message: userMsg });
       setChatHistory(prev => [...prev, { sender: 'ai', text: res.data.answer || res.data.response || res.data }]);
     } catch (err: any) {
       console.error(err);

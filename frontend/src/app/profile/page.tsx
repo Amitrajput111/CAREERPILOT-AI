@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
+import api from '../../lib/api';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { ShellLayout } from '../../components/ShellLayout';
-import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   User, ShieldAlert, GraduationCap, MapPin, Calendar, 
@@ -102,28 +102,13 @@ export default function ProfilePage() {
   }, [user, authLoading, router]);
 
   // Dynamic Auth Header Helper
-  const getAuthHeaders = () => {
-    if (typeof window !== 'undefined') {
-      const savedUser = localStorage.getItem('cp_session');
-      if (savedUser) {
-        try {
-          const parsed = JSON.parse(savedUser);
-          return { Authorization: `Bearer ${parsed.accessToken}` };
-        } catch (e) {
-          return {};
-        }
-      }
-    }
-    return {};
-  };
+  
 
   // Fetch Profile data
   const { data: profile, isLoading } = useQuery<ProfileData>({
     queryKey: ['profile'],
     queryFn: async () => {
-      const res = await axios.get('/api/profile', {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.get('/api/profile');
       return res.data;
     },
     enabled: !!user,
@@ -133,7 +118,7 @@ export default function ProfilePage() {
   const { data: roles } = useQuery<any[]>({
     queryKey: ['roles'],
     queryFn: async () => {
-      const res = await axios.get('/api/careers/roles');
+      const res = await api.get('/api/careers/roles');
       return res.data;
     },
     enabled: !!user,
@@ -158,9 +143,7 @@ export default function ProfilePage() {
   // Profile update mutation
   const updateProfileMutation = useMutation({
     mutationFn: async (updatedData: any) => {
-      const res = await axios.post('/api/profile', updatedData, {
-        headers: getAuthHeaders(),
-      });
+      const res = await api.post('/api/profile', updatedData);
       return res.data;
     },
     onSuccess: () => {
@@ -205,9 +188,9 @@ export default function ProfilePage() {
     formData.append('file', file);
 
     try {
-      await axios.post('/api/profile/resume', formData, {
+      await api.post('/api/profile/resume', formData, {
         headers: {
-          ...getAuthHeaders(),
+          
           'Content-Type': 'multipart/form-data',
         },
       });

@@ -48,12 +48,12 @@ export class CareersController {
     @Param('id') id: string,
     @Body() body: any,
   ) {
-    return this.careersService.submitAssessment(req.user.id, id, body.answers);
+    return this.careersService.submitAssessment(req.user.sub, id, body.answers);
   }
 
   @Get('skills/:id')
   @UseGuards(JwtAuthGuard)
   async getSkillDetails(@Req() req: any, @Param('id') id: string) {
-    return this.careersService.getSkillDetails(req.user.id, id);
+    return this.careersService.getSkillDetails(req.user.sub, id);
   }
 }
