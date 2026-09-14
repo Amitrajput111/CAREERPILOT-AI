@@ -1,0 +1,21 @@
+{
+  "name": "careerpilot-ai",
+  "version": "1.0.0",
+  "description": "CareerPilot AI Monorepo",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "dev": "npx concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run start:dev",
+    "build": "cd backend && npm run build && cd ../frontend && npm run build",
+    "start": "npx concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:frontend": "cd frontend && npm run start",
+    "start:backend": "cd backend && npm run start:prod",
+    "seed": "cd backend && npm run postinstall"
+  }
+}
