@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { AiService } from '../ai/ai.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const pdfParse = require('pdf-parse');
+
 
 @Injectable()
 export class CareersService {
@@ -169,6 +169,7 @@ export class CareersService {
 
     let rawText = '';
     try {
+      const pdfParse = require('pdf-parse');
       const parsed = await pdfParse(buffer);
       rawText = parsed.text || '';
     } catch (err) {

@@ -2,8 +2,7 @@ import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { ResumeUploadedEvent } from '../../common/events';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pdfParse = require('pdf-parse');
+
 import { AiService } from '../ai/ai.service';
 
 @Injectable()
@@ -95,6 +94,7 @@ export class ProfilesService {
 
     let rawText = '';
     try {
+      const pdfParse = require('pdf-parse');
       const parsed = await pdfParse(buffer);
       rawText = parsed.text || '';
     } catch (err) {
