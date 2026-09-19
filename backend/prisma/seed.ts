@@ -1,9 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
-
-// Direct connection via better-sqlite3 adapter for script execution
-const adapter = new PrismaBetterSqlite3({ url: 'dev.db' });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Starting database seeding...');
