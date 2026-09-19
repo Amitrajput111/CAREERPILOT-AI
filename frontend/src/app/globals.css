@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* ── Light mode tokens ──────────────────────────────────────────────────── */
 :root {
   --background: #F8FAFC;
   --foreground: #0F172A;
@@ -12,6 +13,18 @@
   --surface: #FFFFFF;
   --border-color: #E2E8F0;
   --hover-bg: #F1F5F9;
+}
+
+/* ── Dark mode aware (prevents jarring white flash on dark OS) ──────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0F172A;
+    --foreground: #F1F5F9;
+    --card-bg: #1E293B;
+    --surface: #1E293B;
+    --border-color: #334155;
+    --hover-bg: #1E293B;
+  }
 }
 
 @theme {
@@ -39,7 +52,81 @@ body {
   overflow-x: hidden;
 }
 
-/* Premium Vercel/Linear style panels */
+/* ── Premium animation keyframes ────────────────────────────────────────── */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes floatUp {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+/* ── Animation utility classes ───────────────────────────────────────────── */
+
+.animate-fadeInUp    { animation: fadeInUp    0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fadeIn      { animation: fadeIn      0.35s ease-out forwards; }
+.animate-slideInRight { animation: slideInRight 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slideInLeft  { animation: slideInLeft  0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-scaleIn     { animation: scaleIn     0.3s  cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-floatUp     { animation: floatUp     3s    ease-in-out infinite; }
+
+/* Staggered children */
+.stagger-children > *:nth-child(1) { animation-delay: 0ms;   }
+.stagger-children > *:nth-child(2) { animation-delay: 80ms;  }
+.stagger-children > *:nth-child(3) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 320ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 400ms; }
+
+/* ── Scroll-reveal ───────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Shimmer skeleton ────────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* ── Premium glass panels ────────────────────────────────────────────────── */
 .glass-panel {
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -51,7 +138,7 @@ body {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .glass-panel-hover:hover {
-  border-color: #CBD5E1; /* slate 300 */
+  border-color: #CBD5E1;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
   transform: translateY(-2px);
 }
@@ -85,18 +172,21 @@ body {
   transform: translateY(-1px);
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* ── Progress bar fill animation ─────────────────────────────────────────── */
+.progress-bar-fill {
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-::-webkit-scrollbar-track {
-  background: #F8FAFC;
-}
-::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+
+/* ── Heatmap cell ────────────────────────────────────────────────────────── */
+.heatmap-cell {
   border-radius: 3px;
+  transition: opacity 0.15s ease;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
-}
+.heatmap-cell:hover { opacity: 0.8; }
+
+/* ── Custom scrollbars ───────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #F8FAFC; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+

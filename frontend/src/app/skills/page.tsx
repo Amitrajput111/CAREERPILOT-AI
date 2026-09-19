@@ -59,12 +59,14 @@ export default function SkillAnalysisPage() {
 
   if (authLoading || profileLoading) {
     return (
-      <div className="flex-1 flex justify-center items-center min-h-screen bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 text-primary animate-spin" />
-          <span className="text-xs text-slate-550 font-semibold">Analyzing skill coordinates...</span>
+      <ShellLayout>
+        <div className="flex-1 flex justify-center items-center min-h-[calc(100vh-64px)] bg-background">
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-8 w-8 text-primary animate-spin" />
+            <span className="text-xs text-slate-550 font-semibold">Analyzing skill coordinates...</span>
+          </div>
         </div>
-      </div>
+      </ShellLayout>
     );
   }
 

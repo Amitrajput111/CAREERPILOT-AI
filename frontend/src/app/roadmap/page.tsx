@@ -138,9 +138,11 @@ export default function RoadmapPage() {
 
   if (authLoading || roadmapLoading) {
     return (
-      <div className="flex-1 flex justify-center items-center min-h-screen bg-background">
-        <Loader2 className="h-8 w-8 text-primary animate-spin" />
-      </div>
+      <ShellLayout>
+        <div className="flex-1 flex justify-center items-center min-h-[calc(100vh-64px)] bg-background">
+          <Loader2 className="h-8 w-8 text-primary animate-spin" />
+        </div>
+      </ShellLayout>
     );
   }
 

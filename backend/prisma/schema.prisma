@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
 }
 
 generator client {
@@ -18,7 +18,7 @@ enum TaskStatus {
 }
 
 model User {
-  id           String        @id @default(uuid())
+  id           String        @id @default(uuid()) @map("_id")
   email        String        @unique
   passwordHash String
   role         UserRole      @default(USER)
@@ -30,7 +30,7 @@ model User {
 }
 
 model RefreshToken {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   token     String   @unique
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -39,7 +39,7 @@ model RefreshToken {
 }
 
 model Profile {
-  id              String          @id @default(uuid())
+  id              String          @id @default(uuid()) @map("_id")
   userId          String          @unique
   user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   name            String
@@ -66,7 +66,7 @@ model Profile {
 }
 
 model CareerRole {
-  id               String            @id @default(uuid())
+  id               String            @id @default(uuid()) @map("_id")
   name             String            @unique
   slug             String            @unique
   description      String
@@ -78,13 +78,13 @@ model CareerRole {
 }
 
 model SkillCategory {
-  id     String  @id @default(uuid())
+  id     String  @id @default(uuid()) @map("_id")
   name   String  @unique
   skills Skill[]
 }
 
 model Skill {
-  id                String             @id @default(uuid())
+  id                String             @id @default(uuid()) @map("_id")
   categoryId        String
   category          SkillCategory      @relation(fields: [categoryId], references: [id])
   name              String             @unique
@@ -97,7 +97,7 @@ model Skill {
 }
 
 model RoleSkill {
-  id         String     @id @default(uuid())
+  id         String     @id @default(uuid()) @map("_id")
   roleId     String
   role       CareerRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
   skillId    String
@@ -108,7 +108,7 @@ model RoleSkill {
 }
 
 model UserSkill {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   profileId String
   profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
   skillId   String
@@ -120,7 +120,7 @@ model UserSkill {
 }
 
 model ProjectTemplate {
-  id          String     @id @default(uuid())
+  id          String     @id @default(uuid()) @map("_id")
   roleId      String
   role        CareerRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
   title       String
@@ -129,7 +129,7 @@ model ProjectTemplate {
 }
 
 model Assessment {
-  id              String           @id @default(uuid())
+  id              String           @id @default(uuid()) @map("_id")
   skillId         String
   skill           Skill            @relation(fields: [skillId], references: [id], onDelete: Cascade)
   title           String
@@ -139,7 +139,7 @@ model Assessment {
 }
 
 model UserAssessment {
-  id           String     @id @default(uuid())
+  id           String     @id @default(uuid()) @map("_id")
   profileId    String
   profile      Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
   assessmentId String
@@ -149,7 +149,7 @@ model UserAssessment {
 }
 
 model LearningResource {
-  id         String   @id @default(uuid())
+  id         String   @id @default(uuid()) @map("_id")
   skillId    String
   skill      Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
   title      String
@@ -159,7 +159,7 @@ model LearningResource {
 }
 
 model ResumeData {
-  id             String   @id @default(uuid())
+  id             String   @id @default(uuid()) @map("_id")
   profileId      String   @unique
   profile        Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
   rawText        String
@@ -170,7 +170,7 @@ model ResumeData {
 }
 
 model Roadmap {
-  id           String        @id @default(uuid())
+  id           String        @id @default(uuid()) @map("_id")
   profileId    String
   profile      Profile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
   title        String
@@ -182,7 +182,7 @@ model Roadmap {
 }
 
 model RoadmapStep {
-  id          String     @id @default(uuid())
+  id          String     @id @default(uuid()) @map("_id")
   roadmapId   String
   roadmap     Roadmap    @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
   phase       Int        
@@ -194,7 +194,7 @@ model RoadmapStep {
 }
 
 model Task {
-  id            String      @id @default(uuid())
+  id            String      @id @default(uuid()) @map("_id")
   roadmapStepId String
   roadmapStep   RoadmapStep @relation(fields: [roadmapStepId], references: [id], onDelete: Cascade)
   title         String
@@ -206,7 +206,7 @@ model Task {
 }
 
 model AiReport {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @map("_id")
   profileId   String
   profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
   reportType  String   
@@ -215,7 +215,7 @@ model AiReport {
 }
 
 model AuditLog {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @map("_id")
   userId    String?
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   action    String

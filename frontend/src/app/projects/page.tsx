@@ -34,9 +34,11 @@ export default function ProjectsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex justify-center items-center">
-        <Loader2 className="h-8 w-8 text-primary animate-spin" />
-      </div>
+      <ShellLayout>
+        <div className="min-h-[calc(100vh-64px)] bg-background flex justify-center items-center">
+          <Loader2 className="h-8 w-8 text-primary animate-spin" />
+        </div>
+      </ShellLayout>
     );
   }
 

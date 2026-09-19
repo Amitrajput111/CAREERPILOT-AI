@@ -136,18 +136,20 @@ export default function DashboardPage() {
 
   if (authLoading || profileLoading || roadmapLoading) {
     return (
-      <div className="flex-1 flex justify-center items-center min-h-screen bg-white">
-        <div className="flex flex-col items-center gap-4 max-w-xs w-full px-6">
-          {/* Skeleton Loaders for Dashboard */}
-          <div className="h-8 w-3/4 bg-slate-105 animate-pulse rounded-lg" />
-          <div className="h-4 w-1/2 bg-slate-105 animate-pulse rounded-lg" />
-          <div className="w-full grid grid-cols-2 gap-4 pt-8">
-            <div className="h-28 bg-slate-105 animate-pulse rounded-xl" />
-            <div className="h-28 bg-slate-105 animate-pulse rounded-xl" />
+      <ShellLayout>
+        <div className="flex-1 flex justify-center items-center min-h-[calc(100vh-64px)] bg-white">
+          <div className="flex flex-col items-center gap-4 max-w-xs w-full px-6">
+            {/* Skeleton Loaders for Dashboard */}
+            <div className="h-8 w-3/4 bg-slate-105 animate-pulse rounded-lg" />
+            <div className="h-4 w-1/2 bg-slate-105 animate-pulse rounded-lg" />
+            <div className="w-full grid grid-cols-2 gap-4 pt-8">
+              <div className="h-28 bg-slate-105 animate-pulse rounded-xl" />
+              <div className="h-28 bg-slate-105 animate-pulse rounded-xl" />
+            </div>
+            <div className="h-40 w-full bg-slate-105 animate-pulse rounded-xl mt-6" />
           </div>
-          <div className="h-40 w-full bg-slate-105 animate-pulse rounded-xl mt-6" />
         </div>
-      </div>
+      </ShellLayout>
     );
   }
 
